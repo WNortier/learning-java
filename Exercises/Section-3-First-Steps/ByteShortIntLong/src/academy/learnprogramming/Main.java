@@ -38,5 +38,12 @@ public class Main {
         long bigLongLiteralValue = 2_147_483_647_234L;
 
         System.out.println(bigLongLiteralValue);
+
+        //Casting allows us to tell Java to use the value following the (byte) as a byte
+        //An integer is whole number Java uses by default which is why line 43 works
+        //With no type specified integer will always be assumed by Java
+        int myTotal = (myMinIntValue / 2);
+        byte myNewByteValue = (byte) (myMinByteValue / 2);
+        short myNewShortValue = (short) (myMinShortValue / 2);
     }
 }
