@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="df456f85-7b53-4cc4-8367-93c2b813d8bb" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1YZKZ1K4NdJvz27rHW0aaoakYpl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Hello" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Hello" />
+      <module name="HelloWorld" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Hello" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="df456f85-7b53-4cc4-8367-93c2b813d8bb" name="Default Changelist" comment="" />
+      <created>1583144727718</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583144727718</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="688" y="226" width="848" height="684" key="#Project_Structure" timestamp="1583144768912">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="688" y="226" width="848" height="684" key="#Project_Structure/70.27.1850.1053@70.27.1850.1053" timestamp="1583144768912" />
+    <state width="1066" height="162" key="GridCell.Tab.0.bottom" timestamp="1583326547380">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state width="1066" height="162" key="GridCell.Tab.0.bottom/70.27.1850.1053@70.27.1850.1053" timestamp="1583326547380" />
+    <state width="1066" height="162" key="GridCell.Tab.0.center" timestamp="1583326547380">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state width="1066" height="162" key="GridCell.Tab.0.center/70.27.1850.1053@70.27.1850.1053" timestamp="1583326547380" />
+    <state width="1066" height="162" key="GridCell.Tab.0.left" timestamp="1583326547379">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state width="1066" height="162" key="GridCell.Tab.0.left/70.27.1850.1053@70.27.1850.1053" timestamp="1583326547379" />
+    <state width="1066" height="162" key="GridCell.Tab.0.right" timestamp="1583326547380">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state width="1066" height="162" key="GridCell.Tab.0.right/70.27.1850.1053@70.27.1850.1053" timestamp="1583326547380" />
+    <state x="670" y="374" key="com.intellij.ide.util.TipDialog" timestamp="1583326275086">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="670" y="374" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1583326275086" />
+    <state x="294" y="118" width="1372" height="806" key="new project wizard" timestamp="1583326541768">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="294" y="118" width="1372" height="806" key="new project wizard/70.27.1850.1053@70.27.1850.1053" timestamp="1583326541768" />
+    <state x="677" y="338" width="672" height="678" key="search.everywhere.popup" timestamp="1583146040198">
+      <screen x="70" y="27" width="1850" height="1053" />
+    </state>
+    <state x="677" y="338" width="672" height="678" key="search.everywhere.popup/70.27.1850.1053@70.27.1850.1053" timestamp="1583146040198" />
+  </component>
+</project>
