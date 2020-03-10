@@ -92,6 +92,5 @@ public class Main {
             System.out.println("Got some remainder");
         }
 
-
     }
 }
