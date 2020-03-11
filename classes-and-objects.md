@@ -326,3 +326,28 @@ class MyClass {
 A *package* can be defined as a group made up of similar types of classes, along with sub-packages.
 
 ![packages](https://api.sololearn.com/DownloadFile?id=2868)
+
+When you move/create a class in your package, the following code will appear at the top of the list of files.
+
+```java
+package samples;
+```
+
+This indicates the package to which the class belongs.
+Now, we need to import the classes that are inside a package in our main to be able to use them.
+- The name of the package becomes a part of the name of the class. 
+- The name of the package must match the directory structure where the corresponding class file resides.
+
+The following example shows how to use the **Vehicle** class of the *samples* package.
+
+```java
+import samples.Vehicle;
+
+class MyClass {
+  public static void main(String[ ] args) {
+    Vehicle v1 = new Vehicle();
+    v1.horn();
+  }
+}
+```
+> ## Use a wildcard to import all classes in a package.  For example, import samples.* will import all classes in the samples package.
