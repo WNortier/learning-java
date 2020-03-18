@@ -88,6 +88,17 @@ When we say code from class A has access to code from class B it means class A c
 
 > ##  When you see a question with complex logic check the access modifiers first.  If you spot an access violation such as a class in package A trying to access a default class in package B you know the code wont compile.
 
+```java
+package cert;
+class Beverage { }
+```
+```java
+package exam.stuff;
+import cert.Beverage;
+class Tea extends Beverage { }
+```
+Tea won't compile because its superclass, Beverage, has default access and is in a different package. 
+
 ### 2 Public Access
 
 **The public keyword gives all classes from all packages access to the public class.**
@@ -109,7 +120,7 @@ You should make a final class only if you need an absolute garauntee that none o
 
 ### 3 Abstract classes
 
-**An abstract class can never be instantiated.  Its sole purpose is to be extended (subclassed).**  Note however that you can compile and execute an abstract class even if you don't make an instance of it.  
+**An abstract class can never be instantiated.  Its sole purpose is to be extended (subclassed).**  Note however that you can compile and execute an abstract class even if you don't make an instance of it.  A class can never be marked as both abstract and final - they have nearly opposite meanings.  An abstract class must be subclassed, whereas a final class must not be subclassed.  If you see this combination of *abstract* and *final* modifiers used for a class or method declaration, the code will not compile.    
 
 Why make a class if you can't make objects out of it? Well the class might be too abstract.  Take a car for example, we don't just want a generic car... we want a BMW or a Sabaru.  
 
@@ -132,3 +143,47 @@ Car x = new Car();
 > ## Notice that methods marked as abstract end with a semicolon rather than curly braces.  
 
 Look for questions with method declarations that ends with a semicolon rather than curly braces.  If the method is in a class as opposed to an interface then the method and the class must be marked as abstract.  
+
+# Interfaces 
+
+In general, when you create an interface, you're defining a contract for *what* a class can do, without saying anything about *how* the class will do it.
+An abstract class can have both abstract and nonabstract methods but an an interface generally has only abstract methods.
+Interfaces have very little flexibility in how methods and variables defined in the interface are declared.  
+
+- ### Interface must be declared with the keyword interface.  
+- ### Interface methods are implicitly **public** and **abstract** unless delcared as *default* or *static*. 
+- ### Interface methods cannot be marked final, strictfp or native. 
+- ### All variables declared must be **public, static and final** - in other words interfaces can declare only constants, not instance variables.  
+- ### An interface can only extend one or more other interfaces.  They cannot implement another interface or class.
+- ### Interface types can be used polymorphically. 
+
+What you declare:
+```java
+interface Bounceable
+void bounce();
+void setBounceFactor(int bf);
+```
+
+What the compiler sees:
+```java
+public abstract void bounce() { }
+public abstract void setBounceFactor(int bf) { }
+```
+
+All interface methods must be implemented and must be marked public.  
+What the implementing class must do:
+
+```java
+Class Tire implements Bounceable
+public void bounce() {...}
+public void setBounceFactor(int bf) { }
+```
+
+Both these declarations are legal:
+```java
+public abstract interface Rollable { }
+public interface Rollable { }
+```
+
+Typing the abstract modifier is redundant.  Interfaces are implicitly abstract whether you type abstract or not.  The public modifier is required if you want the interface to have public rather than default access.  
+
