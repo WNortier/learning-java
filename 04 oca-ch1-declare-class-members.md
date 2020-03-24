@@ -418,9 +418,9 @@ void doStuff(int x...) // bad syntax
 void doStuff(int... x, char... y) // too many var-args
 void doStuff(String... s, byte b) // var-arg must be last
 ```
-# Declarations
+# Declarations (Constructors & Variables)
 
-## Constructor declarations
+# Constructor declarations
 
 In java, objects are constructed.  If you don't create one explicitly, the compiler will build one for you.  Every time you make a new object at least one constructor is invoked.  
 ```java
@@ -456,12 +456,12 @@ class Foo2 {
 }
 ```
 
-## Variable declarations
+# Variable declarations
 
 There are two types of variables in Java:
 
 - ### 1 Primitives 
-Once a primitive is delcared its type cannot change but the value may change.
+Once a primitive is delcared its **type** cannot change but the **value** may change.
 
 1.1 Boolean
 1.2 Byte
@@ -472,7 +472,7 @@ Once a primitive is delcared its type cannot change but the value may change.
 1.7 Float
 
 - ### 2 Reference Variables
-A reference variable is usede to refer to or access an object.  A reference variable is declared to be of a certain type and that type can never be changed.  A reference variable can be used to refer to any object of the declared type or of a subtype of the declared type (a compatible type).  More on this in chapter 2. 
+A reference variable is used to refer to or access an object.  A reference variable is declared to be of a certain type and that type can never be changed.  A reference variable can be used to refer to any object of the declared type or of a subtype of the declared type (a compatible type).  More on this in chapter 2. 
 
 Primitive variables can be delcared as:
 
@@ -481,16 +481,135 @@ Primitive variables can be delcared as:
 - ### Method parameters 
 - ### Local variables
 
-Their initialization is discussed in chapter 3.
+**Their initialization is discussed in chapter 3.**
 ```java
 byte b;
 boolean myBooleanPrimitive;
 int x, y, z; // Declaring three primitives
 ```
 
-For the current exam it is important to understand that for the integer types the sequence from small to big is byte, short, int, and long and that doubles are bigger than floats.  
-You will also need to know that number types (both integer and floating point types) are all signed and how that affects their ranges.  
+> ### For the current exam it is important to understand that for the integer types the sequence from small to big is byte, short, int, and long and that doubles are bigger than floats.  
+> ### You will also need to know that number types (both integer and floating point types) are all signed and how that affects their ranges.  
+
+Lets review the concepts:
+
+- ### All 6 number types in Java are made up of a certain number of 8 bit bytes and are signed meaning they can be negative or positive 
+- ### The leftmost bit is the most signigicant digit is used to represent the sign
+- ### The rest of the bits represent the value, using two's complement notation 
 
 ![the-sign-bit-for-a-byte.png](oca-images/ch1-04/the-sign-bit-for-a-byte.png)
 
+The table below shows the primitive types with their ranges and sizes.  
+
+With a byte for example there are 256 possible numbers or (2<sup>8</sup>).  Half of these are negative and the other half - 1 are positive.  The positive range is one less than the negative range because the number 0 is stored as a positive binary number.  We use the formula -2<sup>(bits-1)</sup>, and we use 2<sup>(bits-1)-1</sup> for the positive range.
+
+> ### If you know the first two columns of this table you will be in good shape for the exam
+
 ![ranges-of-numeric-primitives.png](oca-images/ch1-04/ranges-of-numeric-primitives.png)
+
+## Declaring reference variables (class variables, instance variables, method parameters, local variables)
+
+Reference variables can be declared as static variables, instance variables, method parameters, or local parameters.  
+You can also declare one or more reference variables of the same type, in a single line. 
+Examples of reference variables:
+```java
+Object o;
+Dog myNewDogReferenceVariable;
+String s1, s2, s3;
+```
+
+## Instance variables - normally what the constructor refers to
+
+Instance variables are defined inside the class, but outside of any method, and are initialized only when the class is instantiated. Instance variables are the fields which belong to each unique object.  
+
+Instance variables for the name, title and manager for employee objects example:
+```java
+class Employee {
+// define fields (instance variables) for employee instances
+private String name;
+private String title;
+private String manager;
+// other code goes here including access methods for private fields
+}
+```
+This employee class says that each employee instance will know its own name, title and manager. 
+
+> ### For the exam you need to know that instance variables:
+
+- ### Can use any of the four access levels
+- ### Can be marked final or transient
+- ### Cannot be marked abstract, synchronized, strictfp, native or static (static would make them become class variables)
+
+Later in this chapter we will look at what it means to apply the final or transient modifier to an instance variable.  Lets take a look at the difference between instance and local variables.
+
+![comparison-of-modifiers-on-variables-vs-methods.png](oca-images/ch1-04/comparison-of-modifiers-on-variables-vs-methods.png)
+
+## Local (Automatic/Stack/Method) variables
+
+A local variable is a variable declared within a method.  It is declared and initialized within the method.  Just as the local variable starts its life inside the method, its also destroyed when the method has completed.  
+
+- Local variables are always on the **stack** not the *heap* but this will be discussed more in chapter 3
+- There is no such thing as a stack object, only a stack variable
+
+Although the value of the variable might be passed into, say, another method that then stores the value on an instance variable, the variable itself lives only within the scope of the method.
+
+- Local variable declarations **cant use most of the modifiers that can be applied to instance variables** such as public, but they can be marked as **final**. 
+- Before a local variable can be used it must be initialised with a value - local variables dont get default values.  The compiler will reject any local variable initialised without a value.  
+- Local variables are only available within the scope of the method body in which they are initialised.   
+
+The following code is illegal:
+```java
+class TestServer {
+    public void logIn() {
+        int count = 10;
+    }
+    
+    public void doSomething(int i) {
+        count = i; // Won't compile! Can't access count outside method logIn()                                                            
+    }
+}
+```
+___
+
+Note that it is possible to declare a local variable with the same name as an instance variable but it **not recommended**.  Its known as **shadowing**, as the following code demonstrates:
+```java
+class TestServer {
+    int count = 9; // Declare an instance variable named count
+    
+    public void logIn() {
+        int count = 10; // Declare a local variable named count
+        System.out.println("local variable count is " + count);
+    }
+
+    public void count() {
+        System.out.println("instance variable count is " + count);
+    }
+
+    public static void main(String[] args) {
+        new TestServer().logIn();
+        new TestServer().count();
+    }
+}
+```
+The preceding code produces the following output:
+```java
+local variable count is 10
+instance variable count is 9
+```
+____
+
+You might also decide you want to give a method parameter the same name as the instance variable its value is destined for.  The best way to go about resolving the naming collision is to use the **this** keyword.
+> ### The keyword **this** always refers to the object currently running. 
+Example:
+
+```java
+class Foo {
+    int size = 27;
+    public void setSize(int size) {
+        this.size = size; // this.size means the current object's instance variable, size. The size on the right is the parameter
+    }
+}
+```
+
+
+
