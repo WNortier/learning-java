@@ -105,3 +105,14 @@ class CoffeeSize {
 ```
 
 Notice how each of the enumerated values, BIG, HUGE, and OVERWHELMING, is an instance of type CoffeeSize. They're represented as static and final, which, in the Java world, is thought of as a constant. Also notice that each enum value knows its index or position—in other words, the order in which enum values are declared matters. You can think of the CoffeeSize enums as existing in an array of type CoffeeSize, and as you'll see in a later chapter, you can iterate through the values of an enum by invoking the values() method on any enum type. (Don't worry about that in this chapter.)
+
+## Declaring constructors, methods and variables in an enum 
+
+Enums are a special kind of class which allows you to do more than just list the enumerated constant values.  
+You can add:
+- Constructors;
+- Instance variables
+and something strange known as
+- Constant specific class body
+
+To understand why you might need more to your enum, think of this scenario: Imagine you want to know the actual size, in ounces, that map to each of the three *CoffeeSize* constants.  For example, BIG is 8 ounces. 
