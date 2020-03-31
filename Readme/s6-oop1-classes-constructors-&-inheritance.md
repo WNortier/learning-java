@@ -1,7 +1,7 @@
 # SECTION 6 CLASSES, CONSTRUCTORS & INHERITANCE PART 1
 
 - ### [1 Classes](#1_classes)
-- ### [2 Constructors](#2_contructors)
+- ### [2 Constructors](#2_constructors)
 - ### [3 Inheritance](#3_inheritance)
 
 # <a name="1_classes"></a> 1 Classes
