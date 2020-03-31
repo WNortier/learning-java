@@ -1,4 +1,4 @@
-# SECTION 6 
+# SECTION 6 CLASSES, CONSTRUCTORS & INHERITANCE PART 1
 
 - ### [1 Classes](#1_classes)
 - ### [2 Constructors](#2_contructors)
@@ -93,7 +93,7 @@ ___
 ## *Another class example*
 ___
 
-Intellij has a trick to quickly create getters and setters.  Click on *code -> generate* and choose desired option.  There is also a hotkey.
+> ### Intellij has a trick to quickly create getters and setters.  Click on *code -> generate* and choose desired fields to target.  There is also a hotkey.
 
 ![03-generate-03](images/section-6/03-generate-03.png)
 
@@ -159,7 +159,7 @@ public class Account {
 
     public void withdrawal(double withdrawalAmount) {
         
-        if (this.balance - withdrawalAmount <= 0) {
+        if (this.balance - withdrawalAmount < 0) {
             System.out.println("Only " + this.balance + " available. Withdrawal not processed");
          } else {
             this.balance -= withdrawalAmount;
@@ -266,6 +266,76 @@ public class Main {
 ___ 
 ## *Constructors continued*
 ___
+
+As a general rule of thumb when working with constructors it is better to use the *this* keyword for assigning values to instance variables.  This is the point where the object is being created and it is less error-prone approach. 
+
+> ### Intellij has a trick to quickly create constructors.  Click on *code -> generate* and choose desired fields to target.
+
+- ## It is not uncommon to have multiple constructors but there will always be a main constructor which assigns all the classes' instance variables values. 
+
+- ### Other constructors may have zero parameters or only a few parameters.  Zero parameters will set all the default parameter values using the this keyword whereas constructors with a few parameters will pass the respective default and parameter values to the this keyword.   
+
+See VipPerson class below which has **3** constructors: 
+
+**VipPerson.java**
+```java
+package com.timbuchalka;
+
+public class VipPerson {
+    private String name;
+    private double creditLimit;
+    private String emailAddress;
+
+    public VipPerson() {
+        this("Default name", 50000.00, "default@email.com");
+    }
+    public VipPerson(String name, double creditLimit) {
+        this(name, creditLimit, "unknown@email.com");
+    }
+
+    public VipPerson(String name, double creditLimit, String emailAddress) {
+        this.name = name;
+        this.creditLimit = creditLimit;
+        this.emailAddress = emailAddress;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getCreditLimit() {
+        return creditLimit;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+}
+```
+**Main.java**
+```java
+package com.warwick;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // Purely default contructor
+        VipPerson person1 = new VipPerson();
+        System.out.println(person1.getName());
+
+        // 2 Parameter constructor
+        VipPerson person2 = new VipPerson("Bob", 25000.00);
+        System.out.println(person2.getName());
+        System.out.println(person2.getEmailAddress());
+        // Email address here outputs: unknown@email.com since it is the default for the 2 parameter constructor
+
+        // All Parameter constructor 
+        VipPerson person3 = new VipPerson("Tim", 100.00, "tim@email.com");
+        System.out.println(person3.getName());
+        System.out.println(person3.getEmailAddress());
+    }
+}
+```
 # <a name="3_inheritance"></a> 3 Inheritance
 
 
