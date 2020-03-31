@@ -1,13 +1,13 @@
-- ## [1 Encaptulation](#1_Encaptulation)
-- ## [2 Inheritance & Polymorphism](#2_Inheritance_&_Polymorphism)
-- ## [3 Polymorphism](#3_Polymorphism)
-- ## [4 Overriding/Overloading](#4_Overriding/Overloading)
-- ## [5 Casting](#5_Casting)
-- ## [6 Implementing an Interface](#6_Implementing_an_Interface)
-- ## [7 Legal Return Types](#7_Legal_Return_Types)
-- ## [8 Constructors & Instantiation](#8_Constructors_&_Instantiation)
-- ## [9 Initialization Blocks](#9_Initialization_Blocks)
-- ## [10 Statics](#10_Statics)
+- ### [1 Encaptulation](#1_Encaptulation)
+- ### [2 Inheritance & Polymorphism](#2_Inheritance_&_Polymorphism)
+- ### [3 Polymorphism](#3_Polymorphism)
+- ### [4 Overriding/Overloading](#4_Overriding/Overloading)
+- ### [5 Casting](#5_Casting)
+- ### [6 Implementing an Interface](#6_Implementing_an_Interface)
+- ### [7 Legal Return Types](#7_Legal_Return_Types)
+- ### [8 Constructors & Instantiation](#8_Constructors_&_Instantiation)
+- ### [9 Initialization Blocks](#9_Initialization_Blocks)
+- ### [10 Statics](#10_Statics)
 
 # <a name="1_Encaptulation"></a> 1 Encaptulation
 
