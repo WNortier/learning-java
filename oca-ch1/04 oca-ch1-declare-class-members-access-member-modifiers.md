@@ -44,11 +44,12 @@ class Zoo {
     }
 }
 
-class Moo {
-    public void useAzoo(){
+class Moo extends Zoo {
+    public void useMyCoolMethod(){
         // Does an instance of Moo inherit the coolMethod()?
         System.out.println("A Zoo says, " + this.coolMethod());
         // It works because Moo can inherit the public method and invoke it as its own
+        
         // Can an instance of Moo invoke a coolMethod() on an instance of Zoo?
         Zoo z = new Zoo();
         System.out.println("Zoo says, " + z.coolMethod());
@@ -70,6 +71,7 @@ Look at the following source file:
 ```java
 package book;
 import cert.*;
+
 class Goo {
     public static void main(String[] args){
         Sludge o = new Sludge();
@@ -80,6 +82,7 @@ class Goo {
 Now look at the second file:
 ```java
 package cert;
+
 public class Sludge {
     public void testIt(){
         System.out.println("sludge");
@@ -94,6 +97,7 @@ ____
 For a subclass if a member of its superclass is declared public, the subclass inherits that member regardless of whether both classes are in the same package:
 ```java
 package cert;
+
 public class Roo {
     public String doRooThings(){
         return "fun";
@@ -103,6 +107,7 @@ public class Roo {
 When a subclass of the Roo class is created any code in the Roo subclass can call its own inherited doRooThings() method.
 ```java
 package notcert;
+
 class Cloo extends Roo {
     public void testCloo(){
         System.out.println(doRooThings());
@@ -113,6 +118,7 @@ If you see a method invoked without the dot operator ( . ) it means the method o
 Code from some other class can also call the doRooThings() method on a Cloo instance. 
 ```java
 package notcert;
+
 class Toon {
     public static void main(String[] args) {
         Cloo c = new Cloo();
@@ -129,6 +135,7 @@ Private Members -> Cannot Be Accessed
 Members marked private cannot be accessed by code in any class other than the class in which the member was declared.  This is true for both accessing through a new instance and dot notation ( . ) as well as through inheritance and this. 
 ```java
 package cert;
+
 public class Roo {
     private String doRooThings(){
         // Only the Roo class knows about the fun code that goes here
@@ -140,6 +147,7 @@ Attempt to access using **inheritance**:
 ```java
 package notcert;
 import cert.Roo;
+
 class UseARoo extends Roo {
     public void testIt(){
         System.out.println(this.doRooThings()); // Compiler error method is private!
@@ -150,6 +158,7 @@ Attempt to access using a **new instance and dot ( . ) notation**:
 ```java
 package notcert;
 import cert.Roo;
+
 class UseARoo {
     public void testIt(){
         Roo r = new Roo();
@@ -165,13 +174,13 @@ Figure 1-3 illustrates the effects of the public and private modifiers from clas
 
 ## 3 Protected and Default Members 
 Default Members -> Same Package Only
-Protected Members -> Inheritance Same Or Different Package
 
 In the next several sections the word default refers to access control - we're not talking about the new Java 8 interface that can be declared default. The protected and default access control levels are almost identical, but with one critical difference.  A **default** member may only be accessed if the class accessing the member **belongs to the same package**, 
 whereas a **protected member** can can be **accessed (through inheritance) by a subclass even if the subclass is in a different package**.  
 
 ```java
 package certification;
+
 public class OtherClass {
     void testIt() { // No modifier means method has default access
         System.out.println("OtherClass");
@@ -182,6 +191,7 @@ public class OtherClass {
 ```java
 package something;
 import certification.OtherClass;
+
 class AccessClass {
     public static void main(String[] args) {
         OtherClas o = new OtherClass();
@@ -190,11 +200,12 @@ class AccessClass {
 }
 ```
 ## Protected Details (Protected in depth)
-Protected Members -> Inheritance Same Or Different Package
+Protected Members -> Package Level Access & Inheritance for Different Package
 
-Lets take a look at the protected instance variable (an instance variable is a member) of a superclass.  The variable x is protected meaing it will only be accessible through inheritance and available on the instance, a subclass outside the superclass package cannot access it using the parent class reference. 
+Lets take a look at the protected instance variable (an instance variable is a member) of a superclass.  The variable x is protected meaing it has package level access and will only be accessible through inheritance to classes outside its package, a subclass outside the superclass package cannot access it using the parent class reference. 
 ```java
 package certification;
+
 public class Parent {
     protected int x = 9; // Protected access member
 }
@@ -203,6 +214,7 @@ Attempt to access using **inheritance**:
 ```java
 package other;
 import certification.Parent;
+
 class Child extends Parent {
     public void testIt(){
         System.out.println("x is " + x); // No problem, child inherits x and is available on the Child instance
@@ -213,6 +225,7 @@ Attempt to access using a **new instance and dot ( . ) notation**:
 ```java
 package other;
 import certification.Parent;
+
 class Child extends Parent {
     public void testIt() {
         System.out.println("x is " + x); //No problem, child inherits x and is available on the Child instance
@@ -233,12 +246,14 @@ Once a subclass outside-the-package inherits the protected member, that member (
 If you dont type an access modifier in front of a class or member declaration, the access control is default, which means package level only.  
 ```java
 package certification;
+
 public class parent {
     int x = 9; // No access modifier means default (package) access
 }
 ```
 ```java
 package certification;
+
 class Child extends Parent{
     static public void main(String[] args) {
         Child sc = new Child();

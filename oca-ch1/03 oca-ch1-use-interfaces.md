@@ -143,7 +143,7 @@ public class TestSIF implements StaticIface {
         System.out.println(StaticIface.m1()); // Legal: m1()'s type must be included
 
         new TestSIF().go();
-         System.out.println(StaticIface.m1()); // Illegal: reference to interface is required
+         System.out.println(m1()); // Illegal: reference to interface is required
     }
 
     void go() {
@@ -152,3 +152,11 @@ public class TestSIF implements StaticIface {
 
 }
 ```
+
+Which outputs the following
+```java
+42
+42
+```
+
+We will return to our discussion on default and static interface methods in chapter 2. 
