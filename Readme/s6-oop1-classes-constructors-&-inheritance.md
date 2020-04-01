@@ -338,5 +338,5 @@ public class Main {
 ```
 # <a name="3_inheritance"></a> 3 Inheritance
 
-
+An I-Mac and a Dell computer are different in many ways but also share some common features.  Inheritance is used to share common features among classes.  
 
