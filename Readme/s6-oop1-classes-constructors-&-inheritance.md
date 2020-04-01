@@ -279,7 +279,7 @@ See VipPerson class below which has **3** constructors:
 
 **VipPerson.java**
 ```java
-package com.timbuchalka;
+package com.warwick;
 
 public class VipPerson {
     private String name;
@@ -338,5 +338,209 @@ public class Main {
 ```
 # <a name="3_inheritance"></a> 3 Inheritance
 
-An I-Mac and a Dell computer are different in many ways but also share some common features.  Inheritance is used to share common features among classes.  
+All animals are different in many ways but also share some common features.  Inheritance is used to share common features among classes.
 
+We declare an animal class:
+
+**Animal.java**
+```java
+package com.warwick;
+
+public class Animal {
+
+    private String name;
+    private int brain;
+    private int body;
+    private int size;
+    private int weight;
+
+    public Animal(String name, int brain, int body, int size, int weight) {
+        this.name = name;
+        this.brain = brain;
+        this.body = body;
+        this.size = size;
+        this.weight = weight;
+    }
+
+    public void eat() {
+        System.out.println("Animal.eat() called");
+    }
+
+}
+```
+
+- ### Dog class extends the animal class and as a result it gains access to the parameters and properties of the animal constructor.  
+- ### It also includes parameters and properties from its own instance variables.  
+- ### **super** keyword accesses the animal constructor and in this case since dogs always have a brain and a body those parameters are removed from the constructor parameters and passed directly to the *super* call.
+- ### Its possible to call methods from the parent without the super keyword but if a overriden method already exists in the child then this method will take precedence if the this keyword is omitted.   
+
+> ### **Super** refers to the class that was extended 
+
+Dog overrides the public eat() method to create its own version, but it also calls the *super.eat()* which accesses the original eat on the super class. 
+
+**Dog.java**
+```java
+package com.warwick;
+
+public class Dog extends Animal {
+
+    private int eyes;
+    private int legs;
+    private int tail;
+    private int teeth;
+    private String coat;
+
+    public Dog(String name, int size, int weight, int eyes, int legs, int tail, int teeth, String coat) {
+        super(name, 1, 1, size, weight);
+        this.eyes = eyes;
+        this.legs = legs;
+        this.tail = tail;
+        this.teeth = teeth;
+        this.coat = coat;
+    }
+
+    private void chew() {
+        System.out.println("Dog.chew() called");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Dog.eat() called");
+        chew();
+        super.eat();
+    }
+}
+```
+
+Notice how dog has many parameters since it 
+**Main.java**
+```java
+package com.warwick;
+
+public class Main {
+
+    public static void main(String[] args) {
+	    Animal animal = new Animal("Animal", 1, 1, 5, 5);
+
+        Dog dog = new Dog("Yorkie", 8, 20, 2, 4, 1, 20, "long silky");
+        dog.eat();
+
+    }
+}
+// Outputs: 
+
+// Dog.eat() called
+// Dog.chew() called
+// Animal.eat() called
+```
+___ 
+## *Constructors continued*
+___
+
+The concept of inheritance is taking the base characteristics defined in one class and then extending from or inheriting from (the methods and fields) that class to create a new class to inherit those states which we can use in the new class and then we can add new methods and new fields to the new class as well.
+
+Once again referring to the Animal class.
+**Animal.java**
+```java
+package com.warwick;
+
+public class Animal {
+
+    private String name;
+    private int brain;
+    private int body;
+    private int size;
+    private int weight;
+
+    public Animal(String name, int brain, int body, int size, int weight) {
+        this.name = name;
+        this.brain = brain;
+        this.body = body;
+        this.size = size;
+        this.weight = weight;
+    }
+
+    public void eat() {
+        System.out.println("Animal.eat() called");
+
+    }
+
+    public void move(int speed) {
+        System.out.println("Animal.move() called.  Animal is moving at " +speed);
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getBrain() {
+        return brain;
+    }
+
+    public int getBody() {
+        return body;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+}
+```
+**Fish.java**
+```java
+package com.warwick;
+
+public class Fish extends Animal {
+
+    private int gills;
+    private int eyes;
+    private int fins;
+
+    public Fish(String name, int size, int weight, int gills, int eyes, int fins) {
+
+        super(name, 1, 1, size, weight);
+        this.gills = gills;
+        this.eyes = eyes;
+        this.fins = fins;
+    }
+
+    private void rest() {
+
+    }
+
+    private void moveMuscles() {
+
+    }
+
+    private void moveBackFin() {
+
+    }
+
+    private void swim(int speed) {
+        moveMuscles();
+        moveBackFin();
+        super.move(speed);
+    }
+}
+```
+**Main.java**
+```java
+package com.warwick;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Fish fish = new Fish("Goldfish", 5, 3, 10, 2, 3);
+        fish.move(10);
+        // fish.move() in this case calls the move method which it inherited from the animal class 
+        // Outputs: 
+        // Animal.move() called.  Animal is moving at 10
+    }
+}
+```

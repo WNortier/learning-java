@@ -1,8 +1,5 @@
 package com.timbuchalka;
 
-/**
- * Created by dev on 6/07/15.
- */
 public class Animal {
 
     private String name;
@@ -28,8 +25,6 @@ public class Animal {
         System.out.println("Animal.move() called.  Animal is moving at " +speed);
 
     }
-
-
 
     public String getName() {
         return name;
