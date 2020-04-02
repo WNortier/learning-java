@@ -26,6 +26,11 @@ Image below illustrates the use of getters and setters (also known as accessors 
 
 # <a name="2_Inheritance_&_Polymorphism"></a> 2 Inheritance & Polymorphism
 
+### OCA Objectives
+
+- **7.1 Describe inheritance and its benefits.**
+- **7.2 Develop code that demonstrates the use of polymorphism; including overriding and object type versus reference type (sic).**
+
 Inheritance is everywhere in Java.  Remember that the instance of operator returns true if the reference variable being tested is of the type it is being compared to. 
 
 ```java
@@ -195,7 +200,34 @@ And we can also say:
 ```java
 "Subaru IS-A Vehicle"
 ```
+
+### HAS-A
+
+HAS-A relationships are based on use, rather than inheritance. In other words, class A HAS-A B if code in class A has a reference to an instance of class B. For example, you can say the following: A Horse IS-A Animal. A Horse HAS-A Halter.
+```java
+public class Horse extends Animal {
+    private Halter myHalter = new Halter();
+
+    public void tie(LeadRope rope) {
+        myHalter.tie(rope); // Delegate tie behavior to the
+        // Halter object
+    }
+}
+
+public class Halter {
+    public void tie(LeadRope aRope) {
+        // Do the actual tie work here
+    }
+}
+```
+In OO, we don't want callers to worry about which class or object is actually doing the real work. To make that happen, the Horse class hides implementation details from Horse users. Horse users ask the Horse object to do things (in this case, tie itself up), and the Horse will either do it or, as in this example, ask something else (like perhaps an inherited Animal class method) to do it. To the caller, though, it always appears that the Horse object takes care of itself. Users of a Horse should not even need to know that there is such a thing as a Halter class.
+
 # <a name="3_Polymorphism"></a> 3 Polymorphism
+
+Remember that any Java object that can pass more than one IS-A test can be
+considered polymorphic. Other than objects of type Object, all Java objects are polymorphic in that they pass the IS-A test for their own type and for class Object. Remember, too, that the only way to access an object is through a reference variable. 
+
+There are a few key things you should know about references:
 
 # <a name="4_Overriding/Overloading"></a> 4 Overriding/Overloading
 
