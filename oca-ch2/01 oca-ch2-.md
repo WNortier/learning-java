@@ -151,9 +151,50 @@ There are implications, though. The doShapes() method knows only that the object
 > ### The OCA 8 exam won't ask you directly about IS-A and HAS-A relationships. But understanding IS-A and HAS-A relationships will help OCA 8 candidates with many of the questions on the exam.
 
 ### IS-A
+> ### OCA exam won't ask you directly about IS-A and HAS-A relationships.
 
-In OO, the concept of IS-A is based on inheritance.  
+In OO, the concept of IS-A is based on inheritance.  For example, Sabaru IS-A Car or Broccoli IS-A vegetable.
 
+You express the IS-A relationship in Java through the keywords extends (for class inheritance) and implements (for interface implementation).
+
+```java
+public class Car {
+    // Cool Car code goes here
+}
+
+public class Subaru extends Car {
+    // Important Subaru-specific stuff goes here
+    // Sabaru also inherits accessible car members which can include both methods and variables
+}
+```
+A car is a type of Vehicle, so the inheritance tree might start from the vehicle class as follows:
+```java
+public class Vehicle {...}
+public class Car extends Vehicle {...}
+public class Subaru extends Car {...}
+```
+In OO terms, you can say the following:
+```java
+Vehicle is the superclass of Car.
+Car is the subclass of Vehicle.
+Car is the superclass of Subaru.
+Subaru is the subclass of Vehicle.
+Car inherits from Vehicle.
+Subaru inherits from both Vehicle and Car.
+Subaru is derived from Car.
+Car is derived from Vehicle.
+Subaru is derived from Vehicle.
+Subaru is a subtype of both Vehicle and Car.
+```
+Returning to our IS-A relationship, the following statements are true:
+```java
+"Car extends Vehicle" means "Car IS-A Vehicle."
+"Subaru extends Car" means "Subaru IS-A Car."
+```
+And we can also say:
+```java
+"Subaru IS-A Vehicle"
+```
 # <a name="3_Polymorphism"></a> 3 Polymorphism
 
 # <a name="4_Overriding/Overloading"></a> 4 Overriding/Overloading
