@@ -266,6 +266,34 @@ class PlayerPiece extends GameShape implements Animatable {
 }
 ```
 
+So now we have a PlayerPiece that passes the IS-A test for both the GameShape class and the Animatable interface. That means a PlayerPiece can be treated polymorphically as one of four things at any given time, depending on the declared type of the reference variable:
+
+- ### An Object (since any object inherits from Object)
+- ### A GameShape (since PlayerPiece extends GameShape)
+- ### A PlayerPiece (since that's what it really is)
+- ### An Animatable (since PlayerPiece implements Animatable)
+
+Which of the preceding reference variables can invoke the displayShape() method?
+
+Remember that method invocations allowed by the compiler are based slely on the declared type of the reference, regardless of the object type.  
+
+Looking at the four reference types again—Object, GameShape, PlayerPiece, and Animatable — which of these four types know about the displayShape() method?
+
+Both the GameShape class and the PlayerPiece class are known (by the compiler) to have a displayShape() method, so either of those reference types can be used to invoke displayShape(). Remember that to the compiler, a PlayerPiece IS-A GameShape, so the compiler says, "I see that the declared type is PlayerPiece, and since PlayerPiece extends
+GameShape, that means PlayerPiece inherited the displayShape() method. Therefore, PlayerPiece can be used to invoke the displayShape() method."
+
+Which methods can be invoked when the PlayerPiece object is being referred to using a reference declared as type Animatable? Only the animate() method. Of course, the cool thing here is that any class from any inheritance tree can also implement Animatable, so that means if you have a method with an argument declared as type Animatable, you can pass in PlayerPiece objects, SpinningLogo objects, and anything else that's an instance of a class that implements Animatable. And you can use that parameter (of type Animatable) to invoke the animate() method, but not the displayShape() method (which it might not even have), or anything other than what is known to the compiler based on the reference type.
+
+The compiler always knows, though, that you can invoke the methods of class Object on any object, so those are safe to call regardless of the reference—class or interface—used to refer to the object.
+
+We've left out one big part of all this, which is that even though the compiler only knows about the declared reference type, the Java Virtual Machine (JVM) at runtime knows what the object really is. And that means that even if the PlayerPiece object's displayShape() method is called using a GameShape reference variable, if the PlayerPiece overrides the displayShape() method, the JVM will invoke the PlayerPiece version! The JVM looks at the real object at the other end of the reference, "sees" that it has overridden the method of the declared reference variable type, and invokes the method of the object's actual class. 
+
+But there is one other thing to keep in mind:
+
+**Polymorphic method invocations apply only to instance methods. You can always refer to an object with a more general reference variable type (a superclass or interface), but at runtime, the ONLY things that are dynamically selected based on the actual object (rather than the reference type)are instance methods. Not static methods. Not variables.** 
+
+**Only overridden instance methods are dynamically invoked based on the real object's type.**
+
 # <a name="4_Overriding/Overloading"></a> 4 Overriding/Overloading
 
 # <a name="5_Casting"></a> 5 Casting
