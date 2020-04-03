@@ -294,7 +294,42 @@ But there is one other thing to keep in mind:
 
 **Only overridden instance methods are dynamically invoked based on the real object's type.**
 
+Because this definition depends on a clear understanding of overriding and the distinction between static methods and instance methods, we'll cover those later in the chapter.
+
 # <a name="4_Overriding/Overloading"></a> 4 Overriding/Overloading
+
+### OCA Objectives
+
+- **6.1 Create methods with arguments and return values; including overloaded methods.**
+- **7.2 Develop code that demonstrates the use of polymorphism; including overriding and object type versus reference type (sic).**
+
+> ### The exam will use overridden and overloaded methods on many, many questions. It's important to get really clear about which "over" uses which rules!
+
+Any time a type inherits a method from a supertype, you have the opportunity to override the method (unless, as you learned earlier, the method is marked final). The key benefit of overriding is the ability to define behavior that's specific to a particular subtype. The following example demonstrates a Horse subclass of Animal overriding the Animal version of the eat() method:
+
+```java
+public class Animal {
+    public void eat() {
+        System.out.println("Generic Animal Eating Generically");
+    }
+}
+
+class Horse extends Animal {
+    public void eat() {
+        System.out.println("Horse eating hay, oats, " + "and horse treats");
+    }
+}
+```
+
+- ### For abstract methods you inherit from a supertype, you have no choice: You must implement the method in the subtype unless the subtype is also abstract.
+- ### Abstract methods must be implemented by the first concrete subclass, but this is a lot like saying the concrete subclass overrides the abstract methods of the supertype(s). 
+
+So you could think of abstract methods as methods you're forced to override — eventually.
+
+The Animal class creator might have decided that for the purposes of polymorphism, all Animal subtypes should have an eat() method defined in a unique way.
+
+
+
 
 # <a name="5_Casting"></a> 5 Casting
 
