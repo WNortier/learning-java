@@ -328,7 +328,91 @@ So you could think of abstract methods as methods you're forced to override — 
 
 The Animal class creator might have decided that for the purposes of polymorphism, all Animal subtypes should have an eat() method defined in a unique way.
 
+Polymorphically, when an Animal reference refers not to an Animal instance, but to an Animal subclass instance, the caller should be able to invoke eat() on the Animal reference, but the actual runtime object (say, a Horse instance) will run its own specific eat() method. Marking the eat() method abstract is the Animal programmer's way of saying to all subclass developers, "It doesn't make any sense for your new subtype to use a generic eat() method, so you have to come up with your own eat() method implementation!" 
 
+A (nonabstract) example of using polymorphism looks like this:
+
+```java
+public class TestAnimals {
+    public static void main (String [] args) {
+        Animal a = new Animal();
+        Animal b = new Horse(); // Animal ref, but a Horse object
+        a.eat(); // Runs the Animal version of eat()
+        b.eat(); // Runs the Horse version of eat()
+    }
+}
+
+class Animal {
+    public void eat() {
+    System.out.println("Generic Animal Eating Generically");
+    }
+}
+
+class Horse extends Animal {
+    public void eat() {
+        System.out.println("Horse eating hay, oats, " + "and horse treats");
+    }
+
+    public void buck() { }
+}
+```
+
+In the preceding code, the test class uses an Animal reference to invoke a method on a Horse object. Remember, the compiler will allow only methods in class Animal to be invoked when using a reference to an Animal. The following would not be legal given the preceding code:
+
+```java
+Animal c = new Horse();
+c.buck(); // Can't invoke buck();
+// Animal class doesn't have that method
+```
+
+> ### **To reiterate, the compiler looks only at the reference type, not the instance type.**
+
+- ### Polymorphism lets you use a more abstract supertype (including an interface) reference to one of its subtypes (including interface implementers).
+
+- ### The overriding method cannot have a more restrictive access modifier than the method being overridden (for example, you can't override a method marked public and make it protected).
+
+*Think about it: If the Animal class advertises a public eat() method and someone has an Animal reference (in other words, a reference declared as type Animal), that someone will assume it's safe to call eat() on the Animal reference regardless of the actual instance that the Animal reference is referring to. If a subtype were allowed to sneak in and change the access modifier on the overriding method, then suddenly at runtime—when the JVM invokes the true object's (Horse) version of the method rather than the reference type's (Animal) version—the program would die a horrible death.*
+
+```java
+public class TestAnimals {
+    public static void main (String [] args) {
+        Animal a = new Animal();
+        Animal b = new Horse(); // Animal ref, but a Horse object
+        a.eat(); // Runs the Animal version of eat()
+        b.eat(); // Runs the Horse version of eat()
+    }
+}
+
+class Animal {
+    public void eat() {
+        System.out.println("Generic Animal Eating Generically");
+    }
+}
+
+class Horse extends Animal {
+    private void eat() { // whoa! - it's private!
+        System.out.println("Horse eating hay, oats, " + "and horse treats");
+    }
+}
+```
+If this code compiled (which it doesn't), the following would fail at runtime:
+```java
+Animal b = new Horse(); // Animal ref, but a Horse object, so far so good
+b.eat(); // Meltdown at runtime!
+```
+
+The variable b is of type Animal, which has a public eat() method. But remember that at runtime, Java uses virtual method invocation to dynamically select the actual version of the method that will run, based on the actual instance. An Animal reference can always refer to a Horse instance, because Horse IS-A(n) Animal.
+Whether the Horse instance overrides the inherited methods of Animal or simply inherits them, anyone with an Animal reference to a Horse instance is free to call all accessible Animal methods. For that reason, an overriding method must fulfill the contract of the superclass. 
+
+Note: In Chapter 5 we will explore exception handling in detail. Once you've studied Chapter 5, you'll appreciate this single handy list of overriding rules. 
+
+## The rules for overriding a method are as follows:
+
+- ### The argument list must exactly match that of the overridden method. If they don't match, you can end up with an overloaded method you didn't intend.
+- ### The return type must be the same as, or a subtype of, the return type declared in the original overridden method in the superclass. 
+(More on this in a few pages when we discuss covariant returns.)
+- ### The access level can't be more restrictive than that of the overridden method.
+- ### The access level CAN be less restrictive than that of the overridden method.
 
 
 # <a name="5_Casting"></a> 5 Casting
