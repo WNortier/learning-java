@@ -229,6 +229,43 @@ considered polymorphic. Other than objects of type Object, all Java objects are 
 
 There are a few key things you should know about references:
 
+- ### A reference variable can be of only one type and once declared that type can never be changed (although the object it references can change)
+- ### The reference variable can be reassigned to other objects (unless the reference is declared final)
+- ### A reference variables type determines the methods that can be invoked on the object the variable is referencing
+
+- ### A reference variable can refer to any object of the same type as the declared reference, or **it can refer to any subtype of the declared type!**
+
+- ### A reference variable can be declared as a class type or an interface type.  If the variable is declared as an interface type, it can reference any object of the class that *implements* the interface. 
+
+*Earlier we created a GameShape class that was extended by two other classes, PlayerPiece and TilePiece. Now imagine you want to animate some of the shapes on the gameboard. But not all shapes are able to be animated, so what do you do with class inheritance?*
+
+*Could we create a class with an animate() method and have only some of the GameShape subclasses inherit from that class?* 
+
+**No**
+
+A class cannot extend more than one class: that means one parent per class. A class can have multiple ancestors, however, since class B could extend class A, and class C could extend class B, and so on. So any given class might have multiple classes up its inheritance tree, but that's not the same as saying a class directly extends two classes.
+
+*So if that doesn't work, what else could you do? You could simply put the animate() code in GameShape, and then disable the method in classes that can't be animated. But that's a bad design choice for many reasons—it's more error prone; it makes the GameShape class less cohesive; and it means the GameShape API "advertises" that all shapes can be animated when, in fact, that's not true since only some of the GameShape subclasses will be able to run the animate() method successfully.*
+
+The solution: Create an Animatable interface, and have only the GameShape subclasses that can be animated implement the interface.  Heres the interface and the modified PlayerPiece class that implements the interface:
+
+```java
+public interface Animatable {
+    public void animate();
+}
+
+class PlayerPiece extends GameShape implements Animatable {
+    public void movePiece() {
+        System.out.println("moving game piece");
+    }
+    
+    public void animate() {
+        System.out.println("animating...");
+    }
+// more code
+}
+```
+
 # <a name="4_Overriding/Overloading"></a> 4 Overriding/Overloading
 
 # <a name="5_Casting"></a> 5 Casting

@@ -3,6 +3,8 @@
 - ### [1 Classes](#1_classes)
 - ### [2 Constructors](#2_constructors)
 - ### [3 Inheritance](#3_inheritance)
+- ### [4 Reference vs Object vs Instance vs Class](#4_Reference_vs_Object_vs_Instance_vs_Class)
+- ### [5 this vs super](#5_this_vs_super)
 
 # <a name="1_classes"></a> 1 Classes
 
@@ -544,3 +546,100 @@ public class Main {
     }
 }
 ```
+# <a name="4_Reference_vs_Object_vs_Instance_vs_Class"></a> 4 Reference vs Object vs Instance vs Class
+
+- ### Lets use the analogy of building a house to understand classes
+- ### A **class** is basically a blueprint for a house, using the blueprint (plans) we can build as many houses as we like based on those plans
+
+- ### Each house you build (in other words instantiate using the new operator) is an **object** also known as an **instance**
+
+- ### Each house you build has an address (a physical location). In other words, if you want to tell someone where you live, you give them your address (perhaps written one a piece of paper). This is known as a reference.
+- ### You can copy the reference as many times as you like but there is still just one house. In other words we are copying the address not the house.  
+
+- ### We can pass **references** as **parameters** to **constructors** and **methods**.
+
+![reference-vs-object-vs-instance-vs-class](images/section-6/reference-vs-object-vs-instance-vs-class.png)
+
+# <a name="5_this_vs_super"></a> 5 this vs super
+
+## this
+
+The keyword **this** is used to call the current class members (variables and methods).  This is required when we have a parameter with the same name as an instance variable(field).
+
+Note that we can use both of them anywhere in a class except static areas(the static block or a static method). 
+
+## super
+
+The keyword **super** is used to access/call the parent class members (variables and methods).
+___
+
+## this example
+
+The keyword **this** is commonly used with **constructors** and **setters**, and optionally in getters (easier for beginners). In the example below we are using the **this** keyword in the **constructor** and **setter** since there is a parameter with the same name. In the getter we don't have any parameters so the **this** keyword is optional. 
+
+```java
+class House {
+    private String color;
+
+    public House(String color) {
+        // this keyword is required since it has same parameter name as field
+        this.color = color;
+    }
+    
+    public void setColor(String color) {
+        // once again this keyword is required same parameter as field
+        this.color = color;
+    }
+
+    public String getColor() {
+        // this is optional
+        return color;
+    }
+}
+```
+
+## super example 
+
+The keyword **super** is commonly used with **method overriding**, when we call a method with the same name from the parent class. In the example below we have a method printMethod that calls super.printMethod.
+
+In other words its calling the method with the same name from the parent class. Without the keyword **super** in this case it would be a recursive call. Meaning that the method would call it self forever (or until memory is fully used). This is why the **super** keyword is needed. 
+
+```java
+class SuperClass {  // parent class
+    public void printMethod() {
+        System.out.println("Printed in Superclass");
+    }
+}
+
+class SubClass extends SuperClass { // subclass is a child class
+    // override parent method
+    @Override
+    public void printMethod() {
+        super.printMethod();
+        System.out.println("Printed in Subclass");
+    }
+}
+
+class MainClass {
+    public static void main(String[] args) {
+        SubClass s = new SubClass();
+        s.printMethod();
+    }
+}
+```
+
+## this()
+
+
+## super()
+
+
+
+
+
+- ### [1 Method overloading vs overriding](#1_Method_overloading_vs_overriding)
+
+# <a name="1_Method_overloading_vs_overriding"></a> 1 Method overloading vs overriding
+
+- ### [1 Classes](#1_classes)
+# <a name="1_classes"></a> 1 Classes
