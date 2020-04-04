@@ -2,12 +2,6 @@
 - ### [2 Inheritance & Polymorphism](#2_Inheritance_&_Polymorphism)
 - ### [3 Polymorphism](#3_Polymorphism)
 - ### [4 Overriding/Overloading](#4_Overriding/Overloading)
-- ### [5 Casting](#5_Casting)
-- ### [6 Implementing an Interface](#6_Implementing_an_Interface)
-- ### [7 Legal Return Types](#7_Legal_Return_Types)
-- ### [8 Constructors & Instantiation](#8_Constructors_&_Instantiation)
-- ### [9 Initialization Blocks](#9_Initialization_Blocks)
-- ### [10 Statics](#10_Statics)
 
 # <a name="1_Encaptulation"></a> 1 Encaptulation
 
@@ -491,16 +485,154 @@ Lets take a look at illegally overriding the eat() method of `Animal`:
 
 # Overloaded methods
 
+***Overloaded methods*** let you reuse the same method name in a class, but with different arguments (and, optionally, a different return type).
+
+## The rules for overloading a method are as follows:
+
+- ### Overloaded methods MUST change the argument list
+- ### Overloaded methods CAN change the return type
+- ### Overloaded methods CAN change the access modifier
+- ### Overloaded methods CAN declare new or broader checked exceptions
+- ### A method can be overloaded in the ***same*** type or a ***subtype***
+
+In other words if class A defines a `doStuff(int i)` method, the subclass B could define a `doStuff(String s)` method without overriding the superclass version that takes an int. So two methods with the same name but in different types can still be considered overloaded if the subtype inherits one version of the method and then declares another overloaded version in its type definition.
+
+![exam-watch-3](images/exam-watch-3.png)
+
+## Legal overloads
+
+Lets look at a method we want to overload:
+
+```java
+public void changeSize(int size, String name, float pattern) { }
+```
+
+The following methods are legal overloads of the `changeSize()` method: 
+```java
+public void changeSize(int size, String name) { }
+
+private int changeSize(int size, float pattern) { }
+
+public void changeSize(float pattern, String name)
+                        throws IOException { }
+```
+
+## Invoking Overloaded Methods
+
+Chapter 6 will explore how boxing and var-args impact overloading.
+
+When a method is invoked, more than one method of the same name might
+exist for the object type you're invoking a method on. For example, the Horse class
+might have three methods with the same name but with different argument lists,
+which means the method is overloaded.
+
+Deciding which of the matching methods to invoke is based on the arguments.
+```java
+class Adder {
+
+    public int addThem(int x, int y) {
+        return x + y;
+    }
+
+    // Overload the addThem method to add doubles instead of ints
+    public double addThem(double x, double y) { 
+        return x + y;
+    }
+}
+    // From another class, invoke the addThem() method
+public class TestAdder {
+
+    public static void main (String [] args) {
+        Adder a = new Adder();
+        int b = 27;
+        int c = 3;
+        int result = a.addThem(b,c); // Which addThem is invoked?
+        double doubleResult = a.addThem(22.5,9.3); // Which addThem?
+    }
+}
+```
+In this TestAdder code, the first call to a.addThem(b,c) passes two ints to the method, so the first version of addThem() — the overloaded version that takes two int arguments — is called. The second call to a addThem(22.5, 9.3) passes two doubles to the method, so the second version of addThem() — the overloaded version that takes two double arguments — is called.
+
+> ### Invoking overloaded methods that take object references rather than primitives is a little more interesting. Say you have an overloaded method such that one version takes an Animal and one takes a Horse (subclass of Animal).
+
+```java
+class Animal { }
+
+class Horse extends Animal { }
+
+class UseAnimals {
+    public void doStuff(Animal a) {
+        System.out.println("In the Animal version");
+    }
+    public void doStuff(Horse h) {
+        System.out.println("In the Horse version");
+    }
+
+    public static void main (String [] args) {
+        UseAnimals ua = new UseAnimals();
+        Animal animalObj = new Animal();
+        Horse horseObj = new Horse();
+        ua.doStuff(animalObj);
+        ua.doStuff(horseObj);
+    }
+}
+```
+
+The output is what you expect:
+
+`In the Animal version`
+
+`In the Horse version`
+
+But what if you use an Animal reference to a Horse object?
+
+`Animal animalRefToHorse = new Horse();`
+
+`ua.doStuff(animalRefToHorse);`
+
+The preceding code would actually print this:
+
+`in the Animal version`
+
+Even though the actual object at runtime is a `Horse` and not an `Animal`, the choice of which overloaded method to call (in other words, the signature of the method) is **NOT dynamically decided at runtime**. Just remember that the ***reference type*** (not the object type) determines which overloaded method is invoked!
+
+If you invoke a method passing it an `Animal` reference to a `Horse` object, the compiler knows only about the `Animal`, so it chooses the overloaded version of the method that takes an `Animal`. It does not matter that, at runtime, a `Horse` is actually being passed.
+
+> ### To summarize, which *overridden* version of the method to call (in other words, from which class in the inheritance tree) is decided at *runtime* based on *object* type, but which *overloaded* version of the method to call is based on the *reference* type of the argument passed at *compile* time.
+
+![exam-watch-4](images/exam-watch-4.png)
+
+## Polymorphism in Overloaded and Overridden Methods
+
+How does polymorphism work with overloaded methods? From what we just looked at, it doesn't appear that polymorphism matters when a method is overloaded. If you pass an Animal reference, the overloaded method that takes an Animal will be invoked, even if the actual object passed is a Horse. Once the Horse masquerading as Animal gets in to the method, however, the Horse object is still a Horse despite being passed into a method expecting an Animal. So it's true that polymorphism doesn't determine which overloaded version is called; however, polymorphism does come into play when the decision is about which overridden version of a method is called. 
+
+But sometimes a method is both overloaded and overridden. 
+Imagine that the Animal and Horse classes look like this:
+
+```java
+public class Animal {
+    public void eat() {
+        System.out.println("Generic Animal Eating Generically");
+    }
+}
+
+public class Horse extends Animal {
+    public void eat() {
+        System.out.println("Horse eating hay ");
+    }
+
+    public void eat(String s) {
+        System.out.println("Horse eating " + s);
+    }
+}
+```
+
+Notice that the Horse class has both overloaded and overridden the eat() method. 
+Table 2-3 shows which version of the three eat() methods will run depending on how they are invoked.
 
 
-# <a name="5_Casting"></a> 5 Casting
+![diff-overloaded-&-overriden-methods](images/diff-overloaded-&-overridden-methods.png)
 
-# <a name="#6_Implementing_an_Interface"></a> 6 Implementing an Interface
+The table below summarizes the differences between overloaded and overridden metohods:
 
-# <a name="7_Legal_Return_Types"></a> 7 Legal Return Types
-
-# <a name="8_Constructors_&_Instantiation"></a> 8 Constructors & Instantiation
-
-# <a name="9_Initialization_Blocks"></a> 9 Initialization Blocks
-
-# <a name="10_Statics"></a> 10 Statics
+![legal-&-illegal-override-examples-&-exam-watch-5](images/legal-&-illegal-override-examples-&-exam-watch-5.png)
