@@ -305,6 +305,8 @@ Because this definition depends on a clear understanding of overriding and the d
 
 > ### The exam will use overridden and overloaded methods on many, many questions. It's important to get really clear about which "over" uses which rules!
 
+# Overridden Methods
+
 Any time a type inherits a method from a supertype, you have the opportunity to override the method (unless, as you learned earlier, the method is marked final). The key benefit of overriding is the ability to define behavior that's specific to a particular subtype. The following example demonstrates a Horse subclass of Animal overriding the Animal version of the eat() method:
 
 ```java
@@ -408,11 +410,87 @@ Note: In Chapter 5 we will explore exception handling in detail. Once you've stu
 
 ## The rules for overriding a method are as follows:
 
-- ### The argument list must exactly match that of the overridden method. If they don't match, you can end up with an overloaded method you didn't intend.
-- ### The return type must be the same as, or a subtype of, the return type declared in the original overridden method in the superclass. 
+- ### 1 The argument list must exactly match that of the overridden method. If they don't match, you can end up with an overloaded method you didn't intend.
+- ### 2 The return type must be the same as, or a subtype of, the return type declared in the original overridden method in the superclass. 
 (More on this in a few pages when we discuss covariant returns.)
-- ### The access level can't be more restrictive than that of the overridden method.
-- ### The access level CAN be less restrictive than that of the overridden method.
+- ### 3 The access level can't be more restrictive than that of the overridden method.
+- ### 4 The access level CAN be less restrictive than that of the overridden method.
+- ### 5 Instance methods can be overriden only if they are inherited by the subtype.
+~ A subtype within the same package as the instance's supertype can override any supertype method that is not marked private or final. 
+
+~ A subtype within a different package can override only those nonfinal methods marked public or protected since protected methods are inherited by the subtype. 
+- ### 6 The overriding method CAN throw any unchecked (runtime) exception, regardless of whether the overriden method declares the exception. 
+(More in chapter 5.)
+- ### 7 The overriding method must NOT throw checked exceptions that are new or broader than those declared by the overriden method. 
+For example, a method that declares a `FileNotFoundException` cannot be overriden by a method that declares a `SQLException`, `Exception` or any other nonruntime exception unless it's a subclass of `FileNotFoundException`. 
+- ### 8 The overriding method can throw narrower or fewer exceptions.
+Just because an overridden method "takes risks" doesn't mean that the overriding subtype's exception takes the same risks. Bottom line: an overriding method doesn't have to declare any exceptions that it will never throw, regardless of what the overridden method declares.
+- ### 9 You cannot override a method marked final.
+- ### 10 You cannot override a method marked static.
+We will look at an example in a few pages when we discuss `static` methods in more detail. 
+- ### 11 If a method can't be inherited, you cannot override it.  
+Remember that overriding implies that you're reimplementing a method you inherited! The following code is not legal, and even if you added an eat() method to `Horse`, it wouldn't be an override of `Animal's eat()` method:
+```java
+public class TestAnimals {
+    public static void main (String [] args) {
+        Horse h = new Horse();
+        h.eat(); // Not legal because Horse cannot inherit private eat() method
+    }
+}
+
+class Animal {
+    private void eat() {
+        System.out.println("Generic Animal Eating Generically");
+    }
+}
+
+class Horse extends Animal { }
+```
+
+## Invoking a Supertype Version of an Overridden Method
+
+Often, you'll want to take advantage of some of the code in the supertype version of a method, yet still override it to provide some additional specific behavior.
+
+```java
+public class Animal {
+    public void eat() { }
+    public void printYourself() {
+    // Useful printing code goes here
+    }
+}
+
+class Horse extends Animal {
+    public void printYourself() {
+    // Take advantage of Animal code, then add some more
+    super.printYourself();
+    }
+}
+```
+
+In a similar way, you can access an interface's overridden method with the syntax:
+
+```java
+InterfaceX.super.doStuff();
+```
+
+Note: Using super to invoke an overridden method applies only to instance methods. (Remember that static methods can't be overridden.) And you can use super only to access a method in a type's supertype, not the supertype of the supertype—that is, you **cannot** say super.super.doStuff() and you **cannot** say: InterfaceX.super.super.doStuff().
+
+![exam-watch-2](images/exam-watch-2.png)
+
+## Examples of Illegal Method Overrides 
+
+```java
+public class Animal {
+    public void eat() { }
+}
+```
+
+Lets take a look at illegally overriding the eat() method of `Animal`:
+
+![illegal-overrides](images/illegal-overrides.png)
+
+# Overloaded methods
+
 
 
 # <a name="5_Casting"></a> 5 Casting
