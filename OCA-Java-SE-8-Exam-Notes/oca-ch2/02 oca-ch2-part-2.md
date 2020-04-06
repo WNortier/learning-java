@@ -12,6 +12,34 @@
 - **2.2 Differentiate between object reference variables and primitive variables.**
 - **7.3 Determine when casting is necessary.**
 
+You've seen how it's both possible and common to use general reference variable types to refer to more specific object types. It's at the heart of polymorphism.
+
+`Animal animal = new Dog();`
+
+```java
+class Animal {
+    void makeNoise() {System.out.println("generic noise"); }
+}
+
+class Dog extends Animal {
+    void makeNoise() {System.out.println("bark"); }
+    void playDead() { System.out.println("roll over"); }
+}
+
+class CastTest2 {
+    public static void main(String [] args) {
+        Animal [] a = {new Animal(), new Dog(), new Animal() };
+    
+        for(Animal animal : a) {
+            animal.makeNoise();
+            if(animal instanceof Dog) {
+                animal.playDead(); // try to do a Dog behavior?
+            }
+        }
+    }
+}
+```
+
 # <a name="#6_Implementing_an_Interface"></a> 6 Implementing an Interface
 
 # <a name="7_Legal_Return_Types"></a> 7 Legal Return Types
