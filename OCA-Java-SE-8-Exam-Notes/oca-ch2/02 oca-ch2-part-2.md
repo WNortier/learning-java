@@ -118,9 +118,15 @@ So don't be fooled by code that shows a concrete class that declares it implemen
 
 ## More on Casting
 
-[![Watch the video](https://www.youtube.com/watch?v=Qpz2MA4KE9U/maxresdefault.jpg)](https://www.youtube.com/watch?v=Qpz2MA4KE9U)
+[A great video on casting](https://www.youtube.com/watch?v=Qpz2MA4KE9U)
 
 # <a name="#6_Implementing_an_Interface"></a> 6 Implementing an Interface
+
+![interface-exam-watch](images/interface-exam-watch.png)
+
+![interface-comparisons](images/interface-comparisons.png)
+
+![interface-exam-watch-2](images/interface-exam-watch-2.png)
 
 # <a name="7_Legal_Return_Types"></a> 7 Legal Return Types
 
