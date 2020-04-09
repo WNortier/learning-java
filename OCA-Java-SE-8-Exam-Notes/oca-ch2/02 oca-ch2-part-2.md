@@ -134,13 +134,150 @@ public class Ball implements Bounceable { // Keyword
 }
 ```
 
+It compiles, though. And it runs. The interface contract guarantees that a class will have the method (in other words, others can call the method subject to access control), but it never guaranteed a good implementation—or even any actual implementation code in the body of the method. Keep in mind, though, that if the interface declares that a method is NOT void, your class's implementation code has to include a return statement.
+
 Implementation classes must adhere to the same rules for method implementation as a class extending an abstract class. To be a legal implementation class, a nonabstract implementation class must do the following:
+
+- ### Provide concrete (nonabstract) implementations for all abstract methods from the declared interface.
+- ### Follow all the rules for legal overrides, such as the following:
+
+#### 1 *Declare no checked exceptions on implementation methods other than those declared by the interface method or subclasses of those declared by the interface method.*
+
+#### 2 *Maintain the signature of the interface method, and maintain the same return type (or a subtype). (But it does not have to declare the exceptions declared in the interface method declaration.)*
 
 ![interface-exam-watch](images/interface-exam-watch.png)
 
-![interface-comparisons](images/interface-comparisons.png)
+An implementation class can itself be abstract! For example, the following is legal for a class Ball implementing Bounceable: 
+
+`abstract class Ball implements Bounceable { }`
+
+Notice anything missing? We never provided the implementation methods. And that's okay. If the implementation class is *abstract*, it can simply pass the buck to its first concrete subclass. For example, if class BeachBall extends Ball, and BeachBall is not abstract, then BeachBall has to provide an implementation for all the abstract methods from Bounceable:
+
+```java
+class BeachBall extends Ball {
+// Even though we don't say it in the class declaration above,
+// BeachBall implements Bounceable, since BeachBall's abstract superclass (Ball) implements Bounceable
+// Therefore it must declare all the methods in the Bounceable interface
+
+    public void bounce() {
+    // interesting BeachBall-specific bounce code
+    }
+
+    public void setBounceFactor(int bf) {
+    // clever BeachBall-specific code for setting a bounce factor
+    }
+    
+// If Ball defined any abstract methods they would have to be implemented here also
+}
+```
+
+> Look for classes that claim to implement an interface but don't provide the correct method implementations. Unless the implementing class is abstract, the implementing class must provide implementations for all abstract methods defined in the interface.
+
+### There are two more rules:
+
+#### A class can implement more than one interface. It's perfectly legal to say, for example, the following:
+
+`public class Ball implements Bounceable, Serializable, Runnable { ... }`
+
+*You can extend only one class, but you can implement many interfaces (which, as of Java 8, means a form of multiple inheritance, which we'll discuss shortly). In other words:*
+
+ - Subclassing defines who and what you are, whereas 
+ - Implementing defines a role you can play or a hat you can wear, despite how different you might be from some other class implementing the same interface (but from a different inheritance tree). 
+ 
+ *For example, a Person extends HumanBeing (although for some, that's debatable). But a Person may also implement Programmer, Snowboarder, Employee, Parent, or PersonCrazyEnoughToTakeThisExam.*
+
+#### An interface can itself extend another interface (or multiple). The following code is perfectly legal: 
+
+`public interface Bounceable extends Moveable { }`
+
+The first concrete (nonabstract) implementation class of Bounceable must implement all the abstract methods of Bounceable, plus all the abstract methods of Moveable! 
+
+> ### The subinterface, as we call it, simply adds more requirements to the contract of the superinterface.
+
+The first concrete (nonabstract) implementation class of Bounceable must implement all the abstract methods of Bounceable, plus all the abstract methods of Moveable! The subinterface, as we call it, simply adds more requirements to the contract of the superinterface.
+
+*You'll see this concept applied in many areas of Java, especially Java EE, where you'll often have to build your own interface that extends one of the Java EE interfaces.*
+
+As we mentioned earlier, a class is not allowed to extend multiple classes in Java.
+
+An interface, however, is free to extend multiple interfaces:
+```java
+interface Bounceable extends Moveable, Spherical { // ok!
+    void bounce();
+    void setBounceFactor(int bf);
+}
+
+interface Moveable {
+    void moveIt();
+}
+
+interface Spherical {
+    void doSphericalThing();
+}
+```
+
+In the next example, `Ball` is required to implement `Bounceable`, plus all abstract methods from the interfaces that `Bounceable` extends (including any interfaces those interfaces extend, and so on, until you reach the top of the stack—or is it the bottom of the stack?). So Ball would need to look like the following:
+```java
+class Ball implements Bounceable {
+    public void bounce() { } // Implement Bounceable's methods
+    public void setBounceFactor(int bf) { }
+    public void moveIt() { } // Implement Moveable's method
+    public void doSphericalThing() { } // Implement Spherical
+}
+```
+`Ball` needs to implement all of the abstract methods from `Bounceable`, unless `Ball` is marked abstract. In that case,`Ball` could choose to implement any, all, or none of the abstract methods from anyof the interfaces, thus leaving the rest of the implementations to a concrete subclass of `Ball`, as follows:
+```java
+abstract class Ball implements Bounceable {
+    public void bounce() { ... } // Define bounce behavior
+    public void setBounceFactor(int bf) { ... }
+    // Don't implement the rest; leave it for a subclass
+}
+
+class SoccerBall extends Ball { 
+    // class SoccerBall must
+    // implement the interface
+    // methods that Ball didn't
+    public void moveIt() { ... }
+    public void doSphericalThing() { ... }
+    // SoccerBall can choose to override the Bounceable methods
+    // implemented by Ball
+    public void bounce() { ... }
+}
+```
 
 ![interface-exam-watch-2](images/interface-exam-watch-2.png)
+
+Figure 2-5 compares ***concrete*** and ***abstract*** examples of extends and implements for both classes and interfaces.
+
+![interface-comparisons](images/interface-comparisons.png)
+
+A class CAN implement interfaces with duplicate, concrete method signatures! But the good news is that the compiler's got your back, and if you DO want to implement both interfaces, you'll have to provide an overriding method in your class. 
+
+Let's look at the following code:
+```java
+interface I1 {
+    default int doStuff() { return 1; }
+}
+interface I2 {
+    default int doStuff() { return 2; }
+}
+    
+public class MultiInt implements I1, I2 { // needs to override
+    public static void main(String[] args) {
+        new MultiInt().go();
+    }
+
+    void go() {
+        System.out.println(doStuff());
+    }
+    // public int doStuff() {
+    // return 3;
+    // }
+}
+```
+As the code stands, it WILL NOT COMPILE because it's not clear which version of `doStuff()` should be used. In order to make the code compile, you need to ***override*** `doStuff()` in the class. Uncommenting the class's `doStuff()` method would allow the code to compile and when run produce the following output:
+
+`3`
 
 # <a name="7_Legal_Return_Types"></a> 7 Legal Return Types
 
