@@ -122,6 +122,20 @@ So don't be fooled by code that shows a concrete class that declares it implemen
 
 # <a name="#6_Implementing_an_Interface"></a> 6 Implementing an Interface
 
+When you implement an interface, you're agreeing to adhere to the contract defined in the interface.
+
+The JVM runs a compiler check on any class that claims to implement an interface. If the class says it's implementing an interface, it darn well better have an implementation for each abstract method in the interface (with a few exceptions that we'll look at in a moment). Assuming an interface Bounceable with two methods, bounce() and setBounceFactor(), the following class will compile:
+
+```java
+public class Ball implements Bounceable { // Keyword
+// 'implements'
+    public void bounce() { }
+    public void setBounceFactor(int bf) { }
+}
+```
+
+Implementation classes must adhere to the same rules for method implementation as a class extending an abstract class. To be a legal implementation class, a nonabstract implementation class must do the following:
+
 ![interface-exam-watch](images/interface-exam-watch.png)
 
 ![interface-comparisons](images/interface-comparisons.png)
