@@ -281,7 +281,131 @@ As the code stands, it WILL NOT COMPILE because it's not clear which version of 
 
 # <a name="7_Legal_Return_Types"></a> 7 Legal Return Types
 
+This section covers two aspects of return types: what you can declare as a return type, and what you can actually return as a value. We'll take just a quick look at the difference between return type rules for overloaded and overriding methods, because we've already covered that in this chapter. We'll cover a small bit of new ground, though, when we look at polymorphic return types and the rules for what is and is not legal to actually return.
+
+## Return Type Declarations
+
+This section looks at what you're allowed to declare as a return type, which depends primarily on whether you are overriding, overloading, or declaring a new method.
+
+### Return Types on Overloaded Methods 
+
+Method overloading is not much more than name reuse. The overloaded method is a completely different method from any other method of the same name. So if you inherit a method but overload it in a subtype, you're not subject to the restrictions of overriding, which means you can declare any return type you like.
+
+> ### What you can't do is change only the return type. To overload a method, remember, you must change the argument list.
+
+Legal overload: 
+```java
+public class Foo{
+    void go() { }
+}
+
+public class Bar extends Foo {
+    String go(int x) {  // Legal! Return type and argument list changed
+        return null;
+    }
+}
+```
+
+Illegal overload:
+```java
+public class Foo{
+    void go() { }
+}
+
+public class Bar extends Foo {
+    String go() { // Not legal! Can't change only the return type
+        return null;
+    }
+}
+```
+
+### Overriding and Return Types and Covariant Returns
+
+When a subtype wants to change the method implementation of an inherited method (an override), the subtype must define a method that matches the inherited version exactly. 
+
+> ### Or, since Java 5, you're allowed to change the return type in the overriding method as long as the new return type is a subtype of the declared return type of the overridden (superclass) method.
+
+Let's look at a covariant return in action:
+
+```java
+class Alpha {
+    Alpha doStuff(char c) {
+        return new Alpha();
+    }
+}
+
+class Beta extends Alpha {
+    Beta doStuff(char c) { // legal override since Java 1.5
+        return new Beta();
+    }
+}
+```
+![return-types-exam-watch-1](images/return-types-exam-watch-1.png)
+
+## Returning a Value 
+
+You have to remember only **six rules** for returning a value:
+
+- 1. In a method with an ***object reference return type*** you can return `null`.
+```java
+public Button doStuff() {
+    return null;
+}
+```
+- 2. An `array` is a perfectly legal return type 
+```java
+public String[] go() {
+    return new String[] {"Fred", "Barney", "Wilma"};
+}
+```
+- 3. In a method with a ***primitive return type***, you can return any value or variable that can be ***implicitly converted to the declared return type***.
+```java
+public int foo() {
+    char c = 'c';
+    return c; // char is compatible with int
+}
+```
+- 4. In a method with a ***primitive return type***, you can return any value or variable that can be ***explicitly cast to the declared return type***.
+```java
+public int foo() {
+    float f = 32.5f;
+    return (int) f;
+}
+```
+- 5. You must not return anything from a method with a ***void*** return type. Al though you can say `return`. 
+```java
+public void bar() {
+    return "this is it"; // Not legal!!
+}
+```
+- 6. In a method with an ***object reference return type***, you can ***return any object type that can be implicitly cast to the declared return type***.
+```java
+public Animal getAnimal() {
+    return new Horse(); // Assume Horse extends Animal
+}
+public Object getObject() {
+    int[] nums = {1,2,3};
+    return nums; // Return an int array, which is still an object
+}
+public interface Chewable { }
+public class Gum implements Chewable { }
+public class TestChewable {
+    // Method with an interface return type
+    public Chewable getChewable() {
+        return new Gum(); // Return interface implementer
+    }
+}
+```
+Another look at returning a subtype of a declared abstract class return type. 
+
+![return-types-exam-watch-2](images/return-types-exam-watch-2.png)
+
 # <a name="8_Constructors_&_Instantiation"></a> 8 Constructors & Instantiation
+
+### OCA Objectives
+
+- **6.3 Create and overload constructors; including impact on default constructors (sic)**
+- **7.4 Use super and this to access objects and constructors.**
 
 # <a name="9_Initialization_Blocks"></a> 9 Initialization Blocks
 
