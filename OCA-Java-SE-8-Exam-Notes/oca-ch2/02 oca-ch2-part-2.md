@@ -120,7 +120,7 @@ So don't be fooled by code that shows a concrete class that declares it implemen
 
 [A great video on casting](https://www.youtube.com/watch?v=Qpz2MA4KE9U)
 
-# <a name="#6_Implementing_an_Interface"></a> 6 Implementing an Interface
+# <a name="6_Implementing_an_Interface"></a> 6 Implementing an Interface
 
 When you implement an interface, you're agreeing to adhere to the contract defined in the interface.
 
