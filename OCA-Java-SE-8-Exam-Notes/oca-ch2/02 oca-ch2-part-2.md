@@ -699,4 +699,70 @@ The benefit of having overloaded constructors is that you offer flexible ways to
 
 # <a name="9_Initialization_Blocks"></a> 9 Initialization Blocks
 
+### OCA Objectives
+
+**1.2 Define the structure of a Java class**
+**6.3 Create and overload constructors; including impact on default constructors**
+
+There are three places in a Java program in which operations can be performed - methods, constructors and initialization blocks. 
+
+The rules for initialization blocks are as follows:
+
+> ### **1 *Static initialization blocks* run when the class is first loaded.** 
+> ### **2 *Instance initialization blocks* run whenever a new instance is created after the constructors call to super.** (a bit similar to a constructor)
+
+Let's look at an example:
+
+```java
+class SmallInit {
+    static int x;
+    int y;
+    static { x = 7 ; } // static init block
+    { y = 8; } // instance init block
+}
+```
+*As you can see, the syntax for initialization blocks is pretty terse. They don't have names, they can't take arguments, and they don't return anything.*
+
+Instance init block code runs right after the call to super() in a constructor—in other words, after all super constructors have run. You can have many initialization blocks in a class. It is important to note that unlike methods or constructors, **the order in which initialization blocks appear in a class matters.** When it's time for initialization blocks to run, if a class has more than one, they will run in the order in which they appear in the class file—in other words, from the top down.
+
+With this in mind, lets look at another programme: 
+
+```java
+class Init {
+    Init(int x) { System.out.println("1-arg const"); }
+    Init() { System.out.println("no-arg const"); }
+    static { System.out.println("1st static init"); }
+    { System.out.println("1st instance init"); }
+    { System.out.println("2nd instance init"); }
+    static { System.out.println("2nd static init"); }
+    public static void main(String [] args) {
+        new Init();
+        new Init(7);
+    }
+}
+```
+
+To figure out the execution order, remember these rules:
+> - init blocks execute in the order in which they appear.
+
+
+> - **Static init blocks run once, when the class is first loaded.**
+> - **Instance init blocks run every time a class instance is created.**
+> - Instance init blocks run after the constructor's call to super().
+
+```java
+1st static init
+2nd static init
+1st instance init
+2nd instance init
+no-arg const
+1st instance init
+2nd instance init
+1-arg const
+```
+
+As you can see, the *instance init blocks* each ran twice. *Instance init blocks* are often used as a place to put code that all the constructors in a class should share. That way, the code doesn't have to be duplicated across constructors.
+
+![init-blocks](images/init-blocks.png)
+
 # <a name="10_Statics"></a> 10 Statics
