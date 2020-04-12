@@ -766,3 +766,11 @@ As you can see, the *instance init blocks* each ran twice. *Instance init blocks
 ![init-blocks](images/init-blocks.png)
 
 # <a name="10_Statics"></a> 10 Statics
+
+### OCA Objectives
+
+**6.2 Apply the static keyword to methods and fields.**
+
+![static-effects-of-static-on-methods-&-variables](images/static-effects-of-static-on-methods-&-variables.png)
+
+![static-exam-watch](images/static-exam-watch.png)
