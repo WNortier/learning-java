@@ -771,6 +771,128 @@ As you can see, the *instance init blocks* each ran twice. *Instance init blocks
 
 **6.2 Apply the static keyword to methods and fields.**
 
-![static-effects-of-static-on-methods-&-variables](images/static-effects-of-static-on-methods-&-variables.png)
+## Static Variables and Methods
+
+*The static modifier has such a profound impact on the behavior of a method or variable that we're treating it as a concept entirely separate from the other modifiers.*
+
+Imagine you've got a utility class or interface with a method that always runs the same way; its sole function is to return, say, a random number. It wouldn't matter which instance of the class performed the method—it would always behave exactly the same way. In other words, the method's behavior has no dependency on the state (instance variable values) of an object.
+
+So why, then, do you need an object when the method will never be instance-specific? Why not just ask the type itself to run the method?
+
+Let's imagine another scenario: Suppose you want to keep a running count of all instances instantiated from a particular class. Where do you actually keep that variable? It won't work to keep it as an instance variable within the class whose instances you're tracking, because the count will just be initialized back to a default value with each new instance.
+
+- *The answer to both the utility-method-always-runs-the-same scenario and the keep-a-running-total-of-instances scenario is to use the ***static*** modifier.*
+
+> #### Variables and methods marked static belong to the type, rather than to any particular instance. In fact, for classes, you can use a static method or variable without having any instances of that class at all. You need only have the type available to be able to invoke a static method or access a static variable. 
+
+Static variables, too, can be accessed without having an instance of a class. But if there are instances, a static variable of a class will be shared by all instances of that class; there is only one copy.
+___
+The following code declares and uses a static counter variable:
+```java
+class Frog {
+    static int frogCount = 0; // Declare and initialize static variable // non-static version would be int frogCount = 0;
+
+    public Frog() {
+        frogCount += 1; // Modify the value in the constructor
+    }
+
+    public static void main (String [] args) {
+        new Frog();
+        new Frog();
+        new Frog();
+        System.out.println("Frog count is now " + frogCount);
+    }
+}
+```
+
+In the preceding code, the `static frogCount` variable is set to zero when the `Frog` class is first loaded by the JVM, before any `Frog` instances are created! (By the way, you don't actually need to initialize a static variable to zero; static variables get the same default values instance variables get.) Whenever a `Frog` instance is created, the `Frog` constructor runs and increments the `static frogCount` variable. When this code executes, three `Frog` instances are created in `main()`, and the result is
+
+`Frog count is now 3`
+
+Now imagine what would happen if `frogCount` were an **instance variable** (in other words, nonstatic):
+
+The JVM doesn't know which Frog object's `frogCount` you're trying to access. The problem is that `main()` is itself a `static` method and thus isn't running against any particular instance of the class; instead it's running on the class itself. A `static` method can't access a nonstatic (instance) variable because there is no instance! That's not to say there aren't instances of the class alive on the heap, but rather that even if there are, the static method doesn't know anything about them. The same applies to instance methods; a static method can't directly invoke a nonstatic method. 
+> #### Think static = class, nonstatic = instance. 
+Making the method called by the JVM (`main()`) a static method means the JVM doesn't have to create an instance of your class just to start running code.
 
 ![static-exam-watch](images/static-exam-watch.png)
+
+## Accessing Static Methods and Variables
+
+*Since you don't need to have an instance in order to invoke a static method or access a static variable, how do you invoke or use a static member? Whats the syntax?*
+
+Throwback to accessing an instance method: 
+```java
+class Frog {
+    int frogSize = 0;
+    public int getFrogSize() {
+        return frogSize;
+    }
+
+    public Frog(int s) {
+        frogSize = s;
+    }
+
+    public static void main (String [] args) {
+        Frog f = new Frog(25);
+        System.out.println(f.getFrogSize()); // Access instance
+        // method using f
+    }
+}
+```
+In the preceding code, we instantiate a `Frog`, assign it to the reference variable `f`, and then use that `f` reference to invoke a method on the `Frog` instance we just created. In other words, the `getFrogSize()` method is being invoked on a specific `Frog` object on the heap. 
+
+But this approach (using a reference to an object) isn't appropriate for accessing a static method, because there might not be any instances of the class at all!
+
+> ### The way we access a static method (or static variable) is to use the dot operator on the type name, as opposed to using it on a reference to an instance. 
+Observe:
+```java
+class Frog {
+    private static int frogCount = 0; // static variable
+    static int getCount() { // static getter method
+        return frogCount;
+    }
+    public Frog() {
+        frogCount += 1; // Modify the value in the constructor
+    }
+}
+
+class TestFrog {
+    public static void main (String [] args) {
+        new Frog();
+        new Frog();
+        new Frog();
+        System.out.println("from static "+Frog.getCount()); // static context
+        new Frog();
+        new TestFrog().go();
+        Frog f = new Frog();
+        System.out.println("use ref var "+f.getCount()); // use reference var
+    }
+    
+    void go() {
+        System.out.println("from inst "+Frog.getCount()); // instance context
+    }
+}
+```
+which produces the output:
+
+```java
+from static 3
+from instance 4
+use ref var 5
+```
+
+> ### But just to make it really confusing, the Java language also allows you to use an object reference variable to access a static member.
+
+Did you catch the last line of main()? It included this invocation: 
+
+`f.getCount(); // Access a static using an instance variable`
+
+*In the preceding code, we instantiate a Frog, assign the new Frog object to the reference variable f, and then use the f reference to invoke a static method! But even though we are using a specific Frog instance to access the static method, the rules haven't changed.* **This is merely a syntax trick to let you use an object reference variable (but not the object it refers to) to get to a static method or variable, but the static member is still unaware of the particular instance used to invoke the static member.**
+
+In the Frog example, the compiler knows that the reference variable `f` is of type `Frog`, and so the `Frog` class `static` method is run with no awareness or concern for the `Frog` instance at the other end of the `f` reference. In other words, the compiler cares only that reference variable `f` is declared as type `Frog`.
+
+
+
+![static-effects-of-static-on-methods-&-variables](images/static-effects-of-static-on-methods-&-variables.png)
+
