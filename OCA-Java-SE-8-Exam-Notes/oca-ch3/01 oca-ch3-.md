@@ -9,6 +9,11 @@
 
 # <a name="1_Stack_&_Heap"></a> 1 Stack & Heap
 
+For the most part, the various pieces (methods, variables, and objects) of Java programs live in one of two places in memory: the stack or the heap. For now, we're concerned about only three types of things—instance variables, local variables, and objects:
+
+- ### Instance variables and objects live on the heap.
+- ### Local variables live on the stack.
+
 # <a name="2_Literals,_Assignments_&_Variables"></a> 2 Literals, Assignments & Variables
 
 # <a name="3_Scope"></a> 3 Scope

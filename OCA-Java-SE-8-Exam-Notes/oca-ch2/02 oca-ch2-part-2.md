@@ -702,6 +702,7 @@ The benefit of having overloaded constructors is that you offer flexible ways to
 ### OCA Objectives
 
 **1.2 Define the structure of a Java class**
+
 **6.3 Create and overload constructors; including impact on default constructors**
 
 There are three places in a Java program in which operations can be performed - methods, constructors and initialization blocks. 
