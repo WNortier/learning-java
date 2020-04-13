@@ -891,8 +891,67 @@ Did you catch the last line of main()? It included this invocation:
 *In the preceding code, we instantiate a Frog, assign the new Frog object to the reference variable f, and then use the f reference to invoke a static method! But even though we are using a specific Frog instance to access the static method, the rules haven't changed.* **This is merely a syntax trick to let you use an object reference variable (but not the object it refers to) to get to a static method or variable, but the static member is still unaware of the particular instance used to invoke the static member.**
 
 In the Frog example, the compiler knows that the reference variable `f` is of type `Frog`, and so the `Frog` class `static` method is run with no awareness or concern for the `Frog` instance at the other end of the `f` reference. In other words, the compiler cares only that reference variable `f` is declared as type `Frog`.
+___
+Invoking static methods from interfaces is almost the same as invoking static methods from classes, except the "instance variable syntax trick" just discussed works only for static methods in classes. The following code demonstrates how interface static methods can and cannot be invoked:
+```java
+interface FrogBoilable {
+    static int getCtoF(int cTemp) { // interface static method
+        return (cTemp * 9 / 5) + 32;
+    }
+    default String hop() { return "hopping"; } // interface default method
+}
 
+    public class DontBoilFrogs implements FrogBoilable {
+        public static void main(String[] args) {
+        new DontBoilFrogs().go();
+    }
 
+    void go() {
+        System.out.println(hop());                      // 1 – ok for default m
+        // System.out.println(getCtoF(100));            // 2 - cannot find symbol
+        System.out.println(FrogBoilable.getCtoF(100));  // 3 – ok for static m
+        DontBoilFrogs dbf = new DontBoilFrogs();
+        // System.out.println(dbf.getCtoF(100));        // 4 - cannot find symbol
+    }
+}
+```
+Let's review the code:
+
+- **Line 1** is a legal invocation of an interface's default method.
+- **Line 2** is an **illegal** attempt to invoke an interface's static method.
+- **Line 3** is THE legal way to invoke an interface's static method.
+- **Line 4** is another **illegal** attempt to invoke an interface's static method.
 
 ![static-effects-of-static-on-methods-&-variables](images/static-effects-of-static-on-methods-&-variables.png)
 
+> #### Finally, remember that **`static` methods can't be overridden!** This doesn't mean they can't be redefined in a subclass, but redefining and overriding aren't the same thing. 
+
+Let's look at an example of a redefined (remember, not overridden) static method:
+```java
+class Animal {
+    static void doStuff() {
+        System.out.print("a ");
+    }
+}
+
+class Dog extends Animal {
+    static void doStuff() { // it's a redefinition, not an override
+        System.out.print("d ");
+    }
+
+    public static void main(String [] args) {
+        Animal [] a = {new Animal(), new Dog(), new Animal()};
+        for(int x = 0; x < a.length; x++) {
+            a[x].doStuff(); // invoke the static method using the type Animal reference
+        }
+
+        Dog.doStuff(); // invoke using the class name
+    }
+}
+```
+Running this code produces this output:
+
+`a a a d`
+
+Remember, the syntax `a [x].doStuff()` is just a shortcut (the syntax trick) — the compiler is going to substitute something like `Animal.doStuff()` instead. Notice also that you can invoke a static method by using the class name. Notice that we didn't use the enhanced for loop here (covered in Chapter 5), even though we could have. 
+> ### Expect to see a mix of both Java 1.4 and Java 5–8 coding styles and practices on the exam.
