@@ -206,7 +206,7 @@ Instead of initialising everything using getters and setters there is another wa
 # <a name="2_constructors"></a> 2 Constructors
 
 - ### Whenever we are initialising a class with the new keyword, the constructor will be executed to create the object for us  
-- ### Constructors can be created with or without parameters and you can have more than one constructor is a class  
+- ### Constructors can be created with or without parameters and you can have more than one constructor in a class  
 - ### Constructors' name must be the same as the classes name and it has no return type 
 - ### Constructors can be overloaded so there can be more than one constructor
 - ### Constructors with no parameters can pass default values to the constructor with parameters given it uses the this keyword on the first line of the constructor body

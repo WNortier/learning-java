@@ -302,9 +302,87 @@ For this example, we'll use the Dimension class from the java.awt package:
 14.}
 ```
 
+When we run this class, we can see the modify() method was, indeed, able to modify the original (and only) Dimension object created on line 4.
+
+```java
+C:\Java Projects\Reference>java ReferenceTest
+Before, d.height: 10
+dim = 11
+After, d.height: 11
+```
+
+Notice when the Dimension object on line 4 is passed to the `modify()` method, any changes to the object that occur inside the method are being made to the object whose reference was passed. In the preceding example, reference variables `d` and `dim` both point to the same object.
+
 ## Does Java Use Pass-By-Value Semantics?
 
+*If Java passes objects by passing the reference variable instead, does that mean Java uses pass-by-reference for objects? Not exactly, although you'll often hear and read that it does. Java is actually pass-by-value for all variables running within a single VM. Pass-by-value means pass-by-variable-value. And that means pass-by-copy-of- the-variable! (There's that word copy again!)*
+
+> #### It makes no difference if you're passing primitive or reference variables; you are always passing a copy of the bits in the variable.
+
+- 1 So for a primitive variable: 
+You're passing a **copy of the bits representing the value**. For example, if you pass an `int` variable with the value of `3`, you're passing a **copy** of the bits representing `3`. The called method then gets its own copy of the value to do with it what it likes.
+
+- 2 If you're passing an object reference variable: 
+You're passing a **copy of the bits representing the reference to an object**. The called method then gets its own **copy** of the reference variable to do with it what it likes. But because two identical reference variables refer to the exact same object, if the called method modifies the object (by invoking setter methods, for example), the caller will see that the object the caller's original variable refers to has also been changed. 
+
+In the next section, we'll look at how the picture changes when we're talking about primitives. The bottom line on pass-by-value: 
+
+> #### The called method can't change the caller's variable, although for object reference variables, the called method can change the object the variable referred to. 
+
+What's the difference between changing the variable and changing the object? 
+
+For object references, it means the called method can't reassign the caller's original reference variable and make it refer to a different object or null. 
+
+```java
+void bar() {
+  Foo f = new Foo();
+  doStuff(f);
+}
+void doStuff(Foo g) {
+  g.setName("Boo");
+  g = new Foo();
+}
+```
+
+**In the preceding code fragment reassigning `g` does not reassign `f`!** 
+
+At the end of the `bar()` method, two `Foo` objects have been created: one referenced by the local variable `f` and one referenced by the local (argument) variable `g`. Because the `doStuff()` method has a copy of the reference variable, it has a way to get to the original `Foo` object, for instance to call the `setName()` method. But the `doStuff()` method does not have a way to get to the `f` reference variable. So `doStuff()` can change values within the object `f` refers to, but `doStuff()` can't change the actual contents (bit pattern) of `f`. 
+
+> ### In other words, `doStuff()` can change the state of the object that `f` refers to, but it can't make `f` refer to a different object!
+
 ## Passing Primitive Variables
+
+Let's look at what happens when a primitive variable is passed to a method:
+
+```java
+class ReferenceTest {
+  public static void main (String [] args) {
+    int a = 1;
+    ReferenceTest rt = new ReferenceTest();
+    System.out.println("Before modify() a = " + a);
+    rt.modify(a);
+    System.out.println("After modify() a = " + a);
+  }
+
+  void modify(int number) {
+    number = number + 1;
+    System.out.println("number = " + number);
+  }
+}
+```
+In this simple program, the variable a is passed to a method called `modify()`, which increments the variable by `1`. The resulting output looks like this:
+
+```java
+Before modify() a = 1
+number = 2
+After modify() a = 1
+```
+
+Notice that a did not change after it was passed to the method. Remember, it was a copy of a that was passed to the method. When a primitive variable is passed to a method, it is passed by value, which means pass-by-copy-of-the-bits-in-the-variable.
+
+![variables-into-methods-1](images/variables-into-methods-1.png)
+
+![variables-into-methods-2](images/variables-into-methods-2.png)
 
 # <a name="6_Garbage_Collection"></a> 6 Garbage Collection
 
