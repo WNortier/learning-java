@@ -189,22 +189,75 @@ class CompareReference {
 }
 ```
 
-This code creates three reference variables. The first two, a and b, are separate JButton objects that happen to have the same label. The third reference variable, c, is initialized to refer to the same object that a refers to. When this program runs, the following output is produced:
+This code creates three reference variables. The first two, `a` and `b`, are separate `JButton` objects that happen to have the same label. The third reference variable, `c`, is initialized to refer to the same object that a refers to. When this program runs, the following output is produced:
 
 ```java
 Is reference a == b? false
 Is reference a == c? true
 ```
 
-This shows us that a and c reference the same instance of a JButton. The == operator will not test whether two objects are "meaningfully equivalent," a concept we'll cover in much more detail in Chapter 6, when we look at the equals() method (as opposed to the equals operator we're looking at here).
+This shows us that `a` and `c` reference the same instance of a JButton. The `==` operator will not test whether two objects are "meaningfully equivalent," a concept we'll cover in much more detail in Chapter 6, when we look at the `equals()` method (as opposed to the equals operator we're looking at here).
 
-## Equality for Strings and java.lang.Object.equals()
+## Equality for Strings and `java.lang.Object.equals()`
 
-### The equals() Method in Class Object
+We just used `==` to determine whether two reference variables refer to the same object.
 
-### The equals() Method in Class String
+> #### Because objects are so central to Java, every class in Java inherits a method from class Object that tests to see if two objects of the class are "equal." Not surprisingly, this method is called equals().
+
+In this case of the `equals()` method, the phrase "meaningfully equivalent" should be used instead of the word "equal." So the `equals()` method is used to determine if two objects of the same class are "meaningfully equivalent." For classes that you create, you have the option of overriding the `equals()` method that your class inherited from class Object and creating your own definition of "meaningfully equivalent" for instances of your class.
+
+In terms of understanding the `equals()` method for the OCA exam, you need to understand two aspects of the `equals()` method:
+
+- What `equals()` means in class `Object`
+- What `equals()` means in class `String`
+
+### - The `equals()` Method in Class Object
+
+The `equals()` method in class Object works the same way that the `==` operator works. If two references point to the same object, the `equals()` method will return `true`. If two references point to different objects, even if they have the same values, the method will return `false`.
+
+### - The equals() Method in Class String
+
+The `equals()` method in class String has been overridden. When the `equals()` method is used to compare two strings, it will return `true` if the strings have the same value, and it will return `false` if the strings have different values. For String's `equals()` method, values ARE case sensitive.
+
+Let's take a look at how the equals() method works in action (notice that the Budgie class did NOT override `Object.equals()`):
+
+```java
+class Budgie {
+  public static void main(String[] args) {
+    Budgie b1 = new Budgie();
+    Budgie b2 = new Budgie();
+    Budgie b3 = b1;
+    String s1 = "Bob";
+    String s2 = "Bob";
+    String s3 = "bob"; // lower case "b"
+    System.out.println(b1.equals(b2)); // false, different objects
+    System.out.println(b1.equals(b3)); // true, same objects
+    System.out.println(s1.equals(s2)); // true, same values
+    System.out.println(s1.equals(s3)); // false, values are case sensitive
+  }
+}
+```
 
 ### Equality for enums
+
+Once you've declared an `enum`, it's not expandable. At runtime, there's no way to make additional `enum` constants. Of course, you can have as many variables as you'd like refer to a given `enum` constant, so it's important to be able to compare two `enum` reference variables to see if they're "equal"—that is, do they refer to the same enum constant? You can use either the == operator or the `equals()` method to determine whether two variables are referring to the same `enum` constant:
+
+```java
+class EnumEqual {
+  enum Color {RED, BLUE} // ; is optional
+    public static void main(String[] args) {
+      Color c1 = Color.RED; Color c2 = Color.RED;
+      if(c1 == c2) { System.out.println("=="); }
+      if(c1.equals(c2)) { System.out.println("dot equals"); }
+} }
+```
+
+(We know } } is ugly; we're prepping you.) This produces the output:
+
+```java
+==
+dot equals
+```
 
 # <a name="3_instanceof_Comparison"></a> 3 instanceof Comparison
 
