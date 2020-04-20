@@ -1,12 +1,5 @@
-- ### [3 Polymorphism](#3_Polymorphism)
+package com.timbuchalka;
 
-# <a name="3_Polymorphism"></a> 3 Polymorphism
-
-> #### Polymorphism is the mechanism in OOP that allows actions to perform differently based on the actual object that the action is being performed on.
-
-Polymorphism can see that classes extend from eachother. Polymorphism gives unique functionality for a class which has inherited from a base class.
-
-```java
 class Movie {
     private String name;
 
@@ -107,10 +100,3 @@ public class Main {
         return null;
     }
 }
-```
-
----
-
-## Polymorphism continued\_
-
----

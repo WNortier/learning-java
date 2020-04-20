@@ -261,6 +261,102 @@ dot equals
 
 # <a name="3_instanceof_Comparison"></a> 3 instanceof Comparison
 
+> #### The instanceof operator is used for object reference variables only, and you can use it to check whether an object is of a particular type (class or interface).
+
+By "type," we mean class or interface type—in other words, whether the object referred to by the variable on the left side of the operator passes the `IS-A` test for the class or interface type on the right side. (Chapter 2 covered `IS-A` relationships in detail.)
+
+The following simple example:
+
+```java
+public static void main(String[] args) {
+  String s = new String("foo");
+  if (s instanceof String) {
+    System.out.print("s is a String");
+  }
+}
+```
+
+prints this:
+
+`s is a String`
+
+Even if the object being tested is not an actual instantiation of the class type on the right side of the operator, `instanceof` will still return true if the object being compared is **assignment compatible** with the type on the right.
+
+The following example demonstrates a common use for `instanceof`: testing an object to see if it's an instance of one of its subtypes before attempting a downcast:
+
+```java
+class A { }
+class B extends A {
+  public static void main (String [] args) {
+    A myA = new B();
+    m2(myA);
+  }
+  public static void m2(A a) {
+    if (a instanceof B)
+      ((B)a).doBstuff(); // downcasting an A reference to a B reference
+    }
+   static void doBstuff() {
+    System.out.println("'a' refers to a B");
+  }
+}
+```
+
+The code compiles and produces this output:
+
+`'a' refers to a B`
+
+In examples like this, the use of the `instanceof` operator protects the program from attempting an **illegal downcast**.
+
+You can test an object reference against its own class type or any of its superclasses. This means that any object reference will evaluate to true if you use the instanceof operator against type Object, as follows:
+
+```java
+B b = new B();
+  if (b instanceof Object) {
+    System.out.print("b is definitely an Object");
+  }
+```
+
+This prints
+
+`b is definitely an Object`
+
+![exam-watch-3](images/exam-watch-3.png)
+
+In addition, it is legal to test whether the null reference is an instance of a class.
+This will always result in `false`, of course. This example,
+
+```java
+class InstanceTest {
+  public static void main(String [] args) {
+    String a = null;
+    boolean b = null instanceof String;
+    boolean c = a instanceof String;
+    System.out.println(b + " " + c);
+}}
+```
+
+prints this:
+
+`false false`
+
+### instanceof Compiler Error
+
+You can't use the `instanceof` operator to test across two different class hierarchies. For instance, the following will NOT compile:
+
+```java
+class Cat { }
+class Dog {
+  public static void main(String [] args) {
+    Dog d = new Dog();
+    System.out.println(d instanceof Cat);
+  }
+}
+```
+
+Compilation fails—there's no way d could ever refer to a `Cat` or a subtype of `Cat`.
+
+![exam-watch-4](images/exam-watch-4.png)
+
 # <a name="4_Arithmetic_Operators"></a> 4 Arithmetic Operators
 
 # <a name="5_Conditional_Operator"></a> 5 Conditional Operator
@@ -268,3 +364,7 @@ dot equals
 # <a name="6_Logical_Opeartor"></a> 6 Logical Opeartor
 
 # <a name="7_Operator_Precedence"></a> 7 Operator Precedence
+
+```
+
+```
