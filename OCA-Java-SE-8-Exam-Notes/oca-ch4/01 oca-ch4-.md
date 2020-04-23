@@ -359,12 +359,300 @@ Compilation fails—there's no way d could ever refer to a `Cat` or a subtype of
 
 # <a name="4_Arithmetic_Operators"></a> 4 Arithmetic Operators
 
+We're sure you're familiar with the basic arithmetic operators:
+
+■ + addition
+
+■ – subtraction
+
+■ \* multiplication
+
+■ / division
+
+![using-instanceof](images/using-instanceof.png)
+
+These can be used in the standard way:
+
+```java
+int x = 5 * 3;
+int y = x - 4;
+System.out.println("x - 4 is " + y); // Prints 11
+```
+
+### The Remainder (%) Operator (a.k.a. the Modulus Operator)
+
+The remainder operator divides the left operand by the right operand, and the result is the remainder.
+
+> #### Expressions are evaluated from left to right by default. You can change this sequence, or precedence, by adding parentheses. Also remember that the \*, /, and % operators have a higher precedence than the + and - operators.
+
+![exam-watch-5](images/exam-watch-5.png)
+
+### String Concatenation Operator
+
+The plus sign can also be used to concatenate two strings together,
+
+The rule to remember is this:
+
+> #### If either operand is a String, the + operator becomes a String concatenation operator. If both operands are numbers, the + operator is the addition operator.
+
+![exam-watch-6](images/exam-watch-6.png)
+
+### Increment and Decrement Operators
+
+Java has two operators that will increment or decrement a variable by exactly one. These operators are either two plus signs (`++`) or two minus signs (`--`):
+
+■ ++ Increment (prefix and postfix)
+
+■ -- Decrement (prefix and postfix)
+
+The operator is placed either before (prefix) or after (postfix) a variable to change its value. Whether the operator comes before or after the operand can change the outcome of an expression.
+
+Expect to see questions mixing the increment and decrement operators with other operators, as in the following example:
+
+```java
+int x = 2; int y = 3;
+if ((y == x++) | (x < ++y)) {
+  System.out.println("x = " + x + " y = " + y);
+}
+```
+
+The preceding code prints this:
+
+`x = 3 y = 4`
+
+You can read the code as follows: "If 3 is equal to 2 OR 3 < 4"
+The first expression compares x and y, and the result is false, because the increment on x doesn't happen until after the == test is made. Next, we increment x, so now x is 3. Then we check to see if x is less than y, but we increment y before comparing it with x! So the second logical test is (3 < 4). The result is true, so the print statement runs. As with String concatenation, the increment and decrement operators are used throughout the exam, even on questions that aren't trying to test your knowledge of how those operators work. You might see them in questions on for loops, exceptions, or even threads. Be ready.
+
 # <a name="5_Conditional_Operator"></a> 5 Conditional Operator
+
+This operator is constructed using a `?` (question mark) and a `:` (colon). The parentheses are optional.
+
+Here is its structure:
+
+> #### `x = (boolean expression) ? value to assign if true : value to assign if false`
+
+Let's take a look at a conditional operator in code:
+
+```java
+class Salary {
+  public static void main(String [] args) {
+    int numOfPets = 3;
+    String status = (numOfPets<4) ? "Pet limit not exceeded" : "too many pets";
+    System.out.println("This pet status is " + status);
+  }
+}
+```
+
+You can read the preceding code as `"Set numOfPets equal to 3"`.
+
+Next we're going to assign a `String` to the status variable. If `numOfPets` is less than `4`, assign "Pet limit not exceeded" to the status variable; otherwise, assign "too many pets" to the status variable. A conditional operator starts with a `boolean` operation, followed by two possible values for the variable to the left of the assignment (`=`) operator.
+
+You can even **_nest_** conditional operators into one statement:
+
+```java
+class AssignmentOps {
+  public static void main(String [] args) {
+    int sizeOfYard = 10;
+    int numOfPets = 3;
+    String status = (numOfPets<4)?"Pet count OK" : (sizeOfYard > 8)? "Pet limit on the edge" : "too many pets";
+    System.out.println("Pet status is " + status);
+  }
+}
+```
+
+Don't expect many questions using conditional operators, but you might get one.
 
 # <a name="6_Logical_Opeartor"></a> 6 Logical Opeartor
 
-# <a name="7_Operator_Precedence"></a> 7 Operator Precedence
+The exam objectives specify six "logical" operators (`&`, `|`, `^`, `!`, `&&`, and `||`).
 
+Some Oracle documentation uses other terminology for these operators, but for our purposes and in the exam objectives, these six are the logical operators.
+
+### Bitwise Operators (Not an Exam Topic!)
+
+### Short-Circuit Logical Operators
+
+Five logical operators on the exam are used to evaluate statements that contain more than one boolean expression. The most commonly used of the five are the two short-circuit logical operators:
+
+■ `&&` Short-circuit AND
+
+■ `||` Short-circuit OR
+
+They are used to link little boolean expressions together to form bigger boolean expressions. The && and || operators evaluate only boolean values. For an AND (&&) expression to be true, both operands must be true. For example:
+`if ((2 < 3) && (3 < 4)) { }`
+The preceding expression evaluates to true because both operand one `(2 < 3)` and operand two `(3 < 4)` evaluate to true.
+The short-circuit feature of the && operator is so named because it doesn't waste its time on pointless evaluations. A short-circuit && evaluates the left side of the operation first (operand one), and if it resolves to false, the && operator doesn't bother looking at the right side of the expression (operand two) since the && operator already knows that the complete expression can't possibly be true.
+
+The `||` operator is similar to the `&&` operator, except that it evaluates to `true` if EITHER of the operands is `true`. If the first operand in an OR operation is `true`, the result will be `true`, so the short-circuit `||` doesn't waste time looking at the right side of the equation. If the first operand is `false`, however, the short-circuit `||` has to evaluate the second operand to see if the result of the OR operation will be `true` or `false`.
+
+Pay close attention to the following example; you'll see quite a few questions like this on the exam:
+
+```java
+1. class TestOR {
+2.    public static void main(String[] args) {
+3.      if ((isItSmall(3)) || (isItSmall(7))) {
+4.        System.out.println("Result is true");
+5.      }
+6.      if ((isItSmall(6)) || (isItSmall(9))) {
+7.        System.out.println("Result is true");
+8.      }
+9.    }
+10.
+11.   public static boolean isItSmall(int i) {
+12.     if (i < 5) {
+13.       System.out.println("i < 5");
+14.       return true;
+15.       } else {
+16.         System.out.println("i >= 5");
+17.         return false;
+18.       }
+19.     }
+20. }
 ```
 
+What is the result?
+
+```java
+% java TestOR
+i < 5
+Result is true
+i >= 5
+i >= 5
+```
+
+Here's what happened when the main() method ran:
+
+- 1. When we hit line 3, the first operand in the `||` expression (in other words, the left side of the `||` operation) is evaluated.
+
+- 2. The `isItSmall(3)` method is invoked, prints "i < 5", and returns `true`.
+
+- 3. Because the first operand in the `||` expression on line 3 is true, the `||` operator doesn't bother evaluating the second operand. So we never see the "i >= 5" that would have printed had the second operand been evaluated (which would have invoked `isItSmall(7)`).
+
+- 4. Line 6 is evaluated, beginning with the first operand in the `||` expression.
+
+- 5. The `isItSmall(6)` method is called, prints "i >= 5", and returns false.
+
+- 6. Because the first operand in the `||` expression on line 6 is `false`, the `||` operator can't skip the second operand; there's still a chance the expression can be `true`, if the second operand evaluates to `true`.
+
+- 7. The `isItSmall(9)` method is invoked and prints "i >= 5".
+
+- 8. The `isItSmall(9)` method returns `false`, so the expression on line 6 is `false`, and thus line 7 never executes.
+
+![exam-watch-7](images/exam-watch-7.png)
+
+### Logical Operators (not Short-Circuit)
+
+There are two non-short-circuit logical operators:
+
+■ `&` Non-short-circuit AND
+
+■ `|` Non-short-circuit OR
+
+> #### These operators are used in logical expressions just like the `&&` and `||` operators are used, but because they aren't the short-circuit operators, they evaluate both sides of the expression—always! They're inefficient.
+
+- If the first operand (left side) in an `&` expression is false, the second operand will still be evaluated—even though it's now impossible for the result to be true!
+
+- The `|` is just as inefficient: if the first operand is `true`, the Java Virtual Machine (JVM) still plows ahead and evaluates the second operand even when it knows the expression will be `true` regardless.
+
+You'll find a lot of questions on the exam that use both the short-circuit and non-short-circuit logical operators. You'll have to know exactly which operands are evaluated and which are not, because the result will vary depending on whether the second operand in the expression is evaluated. Consider this:
+
+```java
+int z = 5;
+if(++z > 5 || ++z > 6) z++; // z = 7 after this code
+```
+
+versus this:
+
+```java
+int z = 5;
+if(++z > 5 | ++z > 6) z++; // z = 8 after this code
+```
+
+The last two logical operators on the exam are:
+
+■ `^` Exclusive-OR (XOR)
+
+■ `!` Boolean invert
+
+The `^` (exclusive-OR) operator evaluates only boolean values. The `^` operator is related to the non-short-circuit operators we just reviewed, in that it always evaluates both the left and right operands in an expression. For an exclusive-OR (`^`) expression to be `true`, **EXACTLY one operand must be `true`**.
+
+This example:
+
+```java
+System.out.println("xor " + ((2 < 3) ^ (4 > 3)));
+```
+
+produces this output:
+
+`xor false`
+
+The preceding expression evaluates to false because **BOTH** operand one `(2 < 3)` and operand two `(4 > 3)` evaluate to `true`.
+
+The 1 (boolean invert) operator returns the opposite of a boolean's current value. The following statement,
+
+if(!(7 == 5)) { System.out.println("not equal"); }
+
+can be read "If it's not true that 7 == 5," and the statement produces this output:
+
+`not equal`
+
+Here's another example using booleans:
+
+```java
+boolean t = true;
+boolean f = false;
+System.out.println("! " + (t & !f) + " " + f);
+```
+
+It produces this output:
+
+`! true false`
+
+In the preceding example, notice that the `&` test succeeded (printing `true`) and that the value of the boolean variable `f` did not change, so it printed `false`.
+
+# <a name="7_Operator_Precedence"></a> 7 Operator Precedence
+
+> #### The OCA 8 exam has reintroduced the topic of operator precedence. When several operators are used in combination, the order in which they are evaluated can alter the result of the expression.
+
+Take a look at this code:
+
+`System.out.println(true & false == false | true);`
+
+What result would you expect? Imagine a more realistic version, evaluating some booleans:
+`System.out.println(b1 & b2 == b3 | b4);`
+What would you guess the programmer's intention was here? There are two likely scenarios:
+
+- **Scenario 1: (b1 & b2) == (b3 | b4)** If this was the programmer's intention, then he just created a bug.
+- **Scenario 2: b1 & (b2 == b3) | b4** If this was the programmer's intention, then the code will work as intended, but his boss and fellow workers will want to strangle him.
+
+> #### This is a long-winded way to say that when you're writing code, you shouldn't rely on everyone's memory of operator precedence. You should just use parentheses like civilized people do.
+
+![Presedence-hierarchy-of-operators](images/Presedence-hierarchy-of-operators.png)
+
+There are three important general rules for determining how Java will evaluate expressions with operators:
+
+- When two operators of the same precedence are in the same expression, Java evaluates the expression from left to right.
+- When parts of an expression are placed in parentheses, those parts are evaluated first.
+- When parentheses are nested, the innermost parentheses are evaluated first.
+
+A good way to burn these precedence rules into your brain is to—as always— write some test code and play around with it. We've added an example of some test code that demonstrates several of the precedence hierarchy rules listed here. As you can see, we often compared parentheses-free expressions with their parentheses-rich counterparts to prove the rules:
+
+```java
+System.out.println((-7 - 4) + " " + (-(7 - 4))); // unary (-7), beats minus
+// output: -11 -3
+System.out.println((2 + 3 * 4) + " " + ((2 + 3) * 4)); // * beats +
+// output: 14 20
+System.out.println(7 > 5 && 2 > 3); // > beats &&
+// output: false
+System.out.print((true & false == false | true) + " "); // == beats & System.out.
+print(((true & false) == (false | true))); // output: true
+```
+
+And to repeat, the output is:
+
+```java
+-11 -3
+14 20
+false
+true false
 ```
