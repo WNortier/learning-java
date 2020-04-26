@@ -284,9 +284,211 @@ switch(new Integer(4)) {
 
 ### An intro to String "equality"
 
+We've talked about how we know when primitives are equal, but what does it mean for objects to be equal? This is another one of those surprisingly tricky topics, and for those of you who intend to take the OCP exam, you'll spend a lot of time studying "object equality."
+
+> #### For you OCA candidates, all you have to know is that for a switch statement, two Strings will be considered "equal" if they have the same case-sensitive sequence of characters.
+
+For example, in the following partial switch statement, the expression would match the case:
+
+```java
+String s = "Monday";
+switch(s) {
+case "Monday": // matches!
+```
+
+But the following would NOT match:
+
+```java
+String s = "MONDAY";
+switch(s) {
+case "Monday": // Strings are case-sensitive, DOES NOT match
+```
+
+### Break and Fall-Through in switch Blocks
+
+The most important thing to remember about the flow of execution through a switch statement is this:
+
+> #### Case constants are evaluated from the top down, and the first case constant that matches the switch's expression is the execution entry point.
+
+In other words, once a case constant is matched, the Java Virtual Machine (JVM) will execute the associated code block and ALL subsequent code blocks (barring a `break` statement), too! The following example uses a `String` in a case statement:
+
+```java
+class SwitchString {
+    public static void main(String [] args) {
+        String s = "green";
+        switch(s) {
+            case "red": System.out.print("red ");
+            case "green": System.out.print("green ");
+            case "blue": System.out.print("blue ");
+            default: System.out.println("done");
+        }
+    }
+}
+```
+
+In this example case "green": matched, so the JVM executed that code block and all subsequent code blocks to produce the output:
+
+`green blue done`
+
+Again, when the program encounters the keyword `break` during the execution of a `switch` statement, execution will immediately move out of the `switch` block to the next statement after the `switch`. If `break` is omitted, the program just keeps executing the remaining case blocks until either a `break` is found or the `switch` statement ends.
+
+> #### This dropping down is actually called "fall-through," because of the way execution falls from one case to the next. Remember, the matching case is simply your entry point into the `switch` block! If you do want that "just the matching code" behavior, you'll insert a `break`.
+
+An interesting example of this fall-through logic is shown in the following code:
+
+```java
+int x = someNumberBetweenOneAndTen;
+switch (x) {
+case 2:
+case 4:
+case 6:
+case 8:
+case 10: {
+    System.out.println("x is an even number"); break;
+}}
+```
+
+This `switch` statement will print `x is an even number` or nothing, depending on whether the number is between one and ten and is odd or even. For example, if `x` is `4`, execution will begin at `case 4`, but then fall down through `6`, `8`, and `10`, where it prints and then `breaks`. The `break` at `case 10`, by the way, is not needed; we're already at the end of the `switch` anyway.
+
+Note: Because fall-through is less than intuitive, Oracle recommends that you add a comment such as // fall through when you use fall-through logic.
+
+### The default case
+
+What if, using the preceding code, you wanted to print `x is an odd number` if none of the cases (the even numbers) matched? You couldn't put it after the `switch` statement, or even as the last case in the `switch`, because in both of those situations it would always print `x is an odd number`. To get this behavior, you'd use the _`default`_ keyword. The only change we need to make is to add the default case to the preceding code:
+
+```java
+int x = someNumberBetweenOneAndTen;
+switch (x) {
+case 2:
+case 4:
+case 6:
+case 8:
+case 10: { System.out.println("x is even"); break; }
+default: System.out.println("x is an odd number");
+}
+```
+
 ![exam-watch-3](images/exam-watch-3.png)
 
 # <a name="2_Creating_Loops_Constructs"></a> 2 Creating Loops Constructs
+
+Java loops come in three flavors: `while`, `do`, and `for` (and as of Java 5, the for loop has two variations). All three let you repeat a block of code as long as some condition is `true` or for a specific number of iterations.
+
+### 1 Using while loops
+
+The while loop is good when you don't know how many times a block or statement should repeat but you want to continue looping as long as some condition is `true`.
+
+A while statement looks like this:
+
+```java
+while (expression) {
+// do stuff
+}
+```
+
+Or this:
+
+```java
+int x = 2;
+while(x == 2) {
+    System.out.println(x);
+    ++x;
+}
+```
+
+In this case, as in all loops, the expression (test) must evaluate to a boolean result. The body of the while loop will execute only if the expression (sometimes called the "condition") results in a value of true. Once inside the loop, the loop body will repeat until the condition is no longer met because it evaluates to false. In the previous example, program control will enter the loop body because x is equal to 2. However, x is incremented in the loop, so when the condition is checked again it will evaluate to false and exit the loop. _Any variables used in the expression of a while loop must be declared before the expression is evaluated._
+
+In other words, you can't say this:
+
+`while (int x = 2) { } // not legal`
+
+The key point to remember about a `while` loop is that it might not ever run. If the test expression is `false` the first time the `while` expression is checked, the loop body will be skipped and the program will begin executing at the first statement after the `while` loop.
+
+Look at the following example:
+
+```java
+int x = 8;
+while (x > 8) {
+    System.out.println("in the loop");
+    x = 10;
+}
+System.out.println("past the loop");
+```
+
+Running this code produces:
+
+`past the loop`
+
+Because the expression `(x > 8)` evaluates to `false`, none of the code within the while loop ever executes.
+
+### 2 Using do loops
+
+> #### The `do` loop is similar to the `while` loop, except the expression is not evaluated until after the `do` loop's code is executed. Therefore, the code in a `do` loop is guaranteed to execute at least once.
+
+The following shows a do loop in action:
+
+```java
+do {
+System.out.println("Inside loop");
+} while(false);
+```
+
+The `System.out.println()` statement will print once, even though the expression evaluates to `false`. Remember, the do loop will always run the code in the loop body at least once. Be sure to note the use of the semicolon at the end of the while expression.
+
+### 3 Using for loops
+
+We'll call the old style of `for` loop the "basic `for` loop," and we'll call the new style of `for` loop the "enhanced `for` loop" (it's also sometimes called the `for-each`). The terms `for-in`, `for-each`, and "enhanced for" all refer to the same Java construct.
+
+> #### The basic for loop is more flexible than the enhanced for loop, but the enhanced for loop was designed to make iterating through arrays and collections easier to code.
+
+### The basic for loop
+
+The `for` loop is especially useful for flow control when you already know how many times you need to execute the statements in the loop's block. The `for` loop declaration has three main parts besides the body of the loop:
+
+- Declaration and initialization of variables
+- The boolean expression (conditional test)
+- The iteration expression
+
+The three for declaration parts are separated by semicolons. The following two examples demonstrate the for loop. The first example shows the parts of a forloop in a pseudocode form, and the second shows a typical example of a for loop:
+
+```java
+for (/*Initialization*/ ; /*Condition*/ ; /* Iteration */) {
+    /* loop body */
+}
+```
+
+```java
+for (int i = 0; i<10; i++) {
+    System.out.println("i is " + i);
+}
+```
+
+### The basic for loop declaration & initialization
+
+The first part of the for statement lets you declare and initialize zero, one, or multiple variables of the same type inside the parentheses after the for keyword. If you declare more than one variable of the same type, you'll need to separate them with commas as follows:
+
+`for (int x = 10, y = 3; y > 3; y++) { }`
+
+The declaration and initialization happen before anything else in a `for` loop. And whereas the other two parts—the boolean test and the iteration expression — will run with each iteration of the loop, the declaration and initialization happen just once, at the very beginning. You also must know that the scope of variables declared in the `for` loop ends with the `for` loop!
+
+The following demonstrates this:
+
+```java
+for (int x = 1; x < 2; x++) {
+    System.out.println(x); // Legal
+}
+System.out.println(x); // Not Legal! x is now out of scope and can't be accessed.
+```
+
+If you try to compile this, you'll get something like this:
+
+```java
+Test.java:19: cannot resolve symbol
+symbol : variable x
+location: class Test
+System.out.println(x);
+                    ^
+```
 
 # <a name="3_Handling_Exceptions"></a> 3 Handling Exceptions
 
