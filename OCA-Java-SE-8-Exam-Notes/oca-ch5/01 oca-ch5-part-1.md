@@ -1,7 +1,5 @@
 - ## [1 Using if & switch Statements](#1_Using_if_&_switch_Statements)
 - ## [2 Creating Loops Constructs](#2_Creating_Loops_Constructs)
-- ## [3 Handling Exceptions](#3_Handling_Exceptions)
-- ## [4 Common Exceptions & Errors](#4_Common_Exceptions_&_Errors)
 
 # <a name="1_Using_if_&_switch_Statements"></a> 1 Using if & switch Statements
 
@@ -490,6 +488,320 @@ System.out.println(x);
                     ^
 ```
 
-# <a name="3_Handling_Exceptions"></a> 3 Handling Exceptions
+### Basic for Loop: Conditional (boolean) Expression
 
-# <a name="4_Common_Exceptions_&_Errors"></a> 4 Common Exceptions & Errors
+The next section that executes is the conditional expression, which (like all other conditional tests) must evaluate to a boolean value. You can have only one logical expression, but it can be very complex. Look out for code that uses logical expressions like this:
+
+```java
+for (int x = 0; ((((x < 10) && (y-- > 2)) | x == 3)); x++) { }
+```
+
+The preceding code is legal, but the following is not:
+
+```java
+for (int x = 0; (x > 5), (y < 2); x++) { } // too many expressions
+```
+
+> #### The rule to remember is this: You can have only one test expression.
+
+In other words, you can't use multiple tests separated by commas, even though, the other two parts of a for statement can have multiple parts.
+
+### Basic for Loop: Iteration Expression
+
+After each execution of the body of the for loop, the iteration expression is executed. This is where you get to say what you want to happen with each iteration of the loop. Remember that it always happens after the loop body runs!
+
+Look at the following:
+
+```java
+for (int x = 0; x < 1; x++) {
+// body code that doesn't change the value of x
+}
+```
+
+This loop executes just once. The first time into the loop, `x` is set to `0`, then `x` is tested to see if it's less than `1` (which it is), and then the body of the loop executes.
+
+- 1 After the body of the loop runs, the iteration expression runs, incrementing `x` by `1`.
+- 2 Next, the conditional test is checked, and since the result is now false, execution jumps to below the `for` loop and continues.
+
+> #### Keep in mind that barring a forced exit, evaluating the iteration expression and then evaluating the conditional expression are always the last two things that happen in a for loop!
+
+Examples of forced exits include a `break`, a `return`, a `System.exit()`, and an `exception`, which will all cause a loop to terminate abruptly, without running the iteration expression.
+
+Look at the following code:
+
+```java
+static boolean doStuff() {
+    for (int x = 0; x < 3; x++) {
+        System.out.println("in for loop");
+        return true;
+    }
+    return true;
+}
+```
+
+Running this code produces
+
+`in for loop`
+
+The statement prints only once because a return causes execution to leave not just the current iteration of a loop, but the entire method. So the iteration expression never runs in that case.
+
+![causes-of-early-loop-termination](images/causes-of-early-loop-termination.png)
+
+### Basic for loop: for Loop Issues
+
+None of the three sections of the for declaration are required! The following example is perfectly legal (although not necessarily good practice):
+
+```java
+for( ; ; ) {
+    System.out.println("Inside an endless loop");
+}
+```
+
+In this example, all the declaration parts are left out, so the for loop will act like an endless loop.
+
+For the exam, it's important to know that with the absence of the _initialization_ and _increment sections_, the loop will act like a **while loop**.
+
+The following example demonstrates how this is accomplished:
+
+```java
+int i = 0;
+for (;i<10;) {
+i++;
+// do some other work
+}
+```
+
+The next example demonstrates a for loop with multiple variables in play. A comma separates the variables, and they must be of the same type. Remember that the variables declared in the for statement are all local to the `for` loop and can't be used outside the scope of the loop.
+
+```java
+for (int i = 0,j = 0; (i<10) && (j<10); i++, j++) {
+    System.out.println("i is " + i + " j is " +j);
+}
+```
+
+![exam-watch-4](images/exam-watch-4.png)
+
+The last thing to note is that all three sections of the for loop are independent of each other. The three expressions in the for statement don't need to operate on the same variables, although they typically do. But even the iterator expression, which many mistakenly call the "increment expression," doesn't need to increment or set anything; you can put in virtually any arbitrary code statements that you want to happen with each iteration of the loop.
+
+Look at the following:
+
+```java
+int b = 3;
+for (int a = 1; b != 1; System.out.println("iterate")) {
+    b = b - a;
+}
+```
+
+The preceding code prints
+
+`iterate`
+
+`iterate`
+
+![exam-watch-5](images/exam-watch-5.png)
+
+### The Enhanced for Loop (for Arrays)
+
+The enhanced `for` loop, new as of Java 5, is a _specialized_ `for` loop that simplifies looping through an array or a collection. In this chapter we're going to focus on using the enhanced for to loop through arrays. In Chapter 6 we'll revisit the enhanced for, when we discuss the `ArrayList` collection class—where the enhanced for really comes into its own.
+
+Instead of having three components, the enhanced for has two. Let's loop through an array the basic (old) way and then using the enhanced for:
+
+```java
+int [] a = {1,2,3,4};
+
+for(int x = 0; x < a.length; x++) // basic for loop
+    System.out.print(a[x]);
+
+for(int n : a) // enhanced for loop
+    System.out.print(n);
+```
+
+This produces the following output:
+
+`12341234`
+
+More formally, let's describe the enhanced for as follows:
+
+`for(declaration : expression)`
+
+The two pieces of the for statement are
+
+#### declaration
+
+- The _newly declared_ block variable of a type compatible with the elements of the array you are accessing.
+- This variable will be available within the for block, and its value will be the same as the current array element.
+
+#### expression
+
+- This must evaluate to the array you want to loop through.
+- This could be an array variable or a method call that returns an array.
+- The array can be any type: primitives, objects, or even arrays of arrays.
+
+Using the preceding definitions, let's look at some legal and illegal enhanced `for` declarations:
+
+```java
+int x;
+long x2;
+long [] la = {7L, 8L, 9L};
+int [][] twoDee = {{1,2,3}, {4,5,6}, {7,8,9}};
+String [] sNums = {"one", "two", "three"};
+Animal [] animals = {new Dog(), new Cat()};
+
+// legal 'for' declarations
+for(long y : la ) ; // loop thru an array of longs
+for(int[] n : twoDee) ; // loop thru the array of arrays
+for(int n2 : twoDee[2]) ; // loop thru the 3rd sub-array
+for(String s : sNums) ; // loop thru the array of Strings
+for(Object o : sNums) ; // set an Object reference to each String
+for(Animal a : animals) ; // set an Animal reference to each element
+
+// ILLEGAL 'for' declarations
+for(x2 : la) ; // x2 is already declared
+for(int x4 : twoDee) ; // can't stuff an array into an int
+for(int x3 : la) ; // can't stuff a long into an int
+for(Dog d : animals) ; // you might get a Cat!
+```
+
+> #### The enhanced for loop assumes that, barring an early exit from the loop, you'll always loop through every element of the array.
+
+The following discussions of break and continue apply to both the basic and enhanced for loops.
+
+## Using Break & Continue
+
+> #### The `break` and `continue` keywords are used to stop either the entire loop (`break`) or just the current iteration (`continue`). The difference between them is whether or not you `continue` with a new iteration or jump to the first statement below the loop and `continue` from there.
+
+Typically, if you're using `break` or `continue`, you'll do an if test within the loop, and if some condition becomes `true` (or `false` depending on the program), you want to get out immediately.
+
+![exam-watch-6](images/exam-watch-6.png)
+
+The `break` statement causes the program to stop execution of the innermost loop and start processing the next line of code after the block. The `continue` statement causes only the current iteration of the innermost loop to cease and the next iteration of the same loop to start if the condition of the loop is met. When using a `continue` statement with a `for` loop, you need to consider the effects that continue has on the `loop` iteration.
+
+Examine the following code:
+
+```java
+for (int i = 0; i < 10; i++) {
+    System.out.println("Inside loop");
+    continue;
+}
+```
+
+The question is, is this an endless loop? The answer is no. When the `continue` statement is hit, the iteration expression still runs! It runs just as though the current iteration ended "in the natural way." So in the preceding example, i will still increment before the condition (`i < 10`) is checked again.
+
+Most of the time, a `continue` is used within an `if` test as follows:
+
+```java
+for (int i = 0; i < 10; i++) {
+    System.out.println("Inside loop");
+    if (foo.doStuff() == 5) {
+        continue;
+    }
+// more loop code, that won't be reached when the above if test is true
+}
+```
+
+## Unlabeled & Labeled Statements
+
+Both the `break` statement and the `continue` statement can be unlabeled or labeled.
+
+### Unlabeled statements
+
+As stated before, a `break` statement (unlabeled) will exit out of the innermost looping construct and proceed with the next line of code beyond the loop block.
+
+The following example demonstrates a `break` statement:
+
+```java
+boolean problem = true;
+while (true) {
+    if (problem) {
+        System.out.println("There was a problem");
+        break;
+    }
+}
+// next line of code
+```
+
+In the previous example, the `break` statement is unlabeled. The following is an example of an unlabeled `continue` statement:
+
+```java
+while (!EOF) {
+// read a field from a file
+if (wrongField) {
+    continue; // move to the next field in the file
+    }
+// otherwise do other stuff with the field
+}
+```
+
+_In this example, a file is being read one field at a time. When an error is encountered, the program moves to the next field in the file and uses the `continue` statement to go back into the loop (if it is not at the end of the file) and keeps reading the various fields. If the `break` command were used instead, the code would stop reading the file once the error occurred and move on to the next line of code after the loop._
+
+> #### The `continue` statement gives you a way to say, "This particular iteration of the loop needs to stop, but not the whole loop itself. I just don't want the rest of the code in this iteration to finish, so do the iteration expression and then start over with the test, and don't worry about what was below the `continue` statement."
+
+### Labeled statements
+
+> #### Although many statements in a Java program can be labeled, it's most common to use labels with loop statements like for or while, in conjunction with `break` and `continue` statements. A label statement must be placed just before the statement being labeled, and it consists of a _valid identifier that ends with a colon (:)_.
+
+You need to understand the difference between labeled and unlabeled break and continue.
+
+The labeled varieties are needed only in situations where you have a nested loop, and they need to indicate which of the nested loops you want to break from, or from which of the nested loops you want to continue with the next iteration. A break statement will exit out of the labeled loop, as opposed to the innermost loop, if the break keyword is combined with a label.
+Here's an example of what a label looks like:
+
+```java
+foo:
+for (int x = 3; x < 20; x++) {
+    while(y > 7) {
+        y--;
+    }
+}
+```
+
+The label must adhere to the rules for a valid variable name and should adhere to the Java naming convention. The syntax for the use of a label name in conjunction with a `break` statement is the `break` keyword, then the label name, followed by a semicolon. A more complete example of the use of a labeled break statement is as follows:
+
+```java
+boolean isTrue = true;
+outer:
+for(int i=0; i<5; i++) {
+    while (isTrue) {
+        System.out.println("Hello");
+        break outer;
+    }// end of inner while loop
+    System.out.println("Outer loop."); // Won't print
+} // end of outer for loop
+System.out.println("Good-Bye");
+```
+
+Running this code produces
+
+`Hello`
+
+`Good-Bye`
+
+In this example, the word "Hello" will be printed one time. Then, the labeled `break` statement will be executed, and the flow will exit out of the loop labeled outer. The next line of code will then print "Good-Bye".
+
+Let's see what will happen if the `continue` statement is used instead of the `break` statement. The following code example is similar to the preceding one, with the exception of substituting `continue` for `break`:
+
+```java
+outer:
+for (int i=0; i<5; i++) {
+    for (int j=0; j<5; j++) {
+        System.out.println("Hello");
+        continue outer;
+    } // end of inner loop
+    System.out.println("outer"); // Never prints
+}
+System.out.println("Good-Bye");
+```
+
+Running this code produces
+
+```java
+Hello
+Hello
+Hello
+Hello
+Hello
+Good-Bye
+```
+
+In this example, "Hello" will be printed five times. After the `continue` statement is executed, the flow continues with the next iteration of the loop identified with the label. Finally, when the condition in the outer loop evaluates to `false`, this loop will finish and "Good-Bye" will be printed.
+
+![exam-watch-7](images/exam-watch-7.png)
