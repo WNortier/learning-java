@@ -176,3 +176,14 @@ try {
 System.out.println("out of try block");
 catch(Exception ex) { }
 ```
+
+### Propagating Uncaught Exceptions
+
+Why aren't catch clauses required? What happens to an exception that's thrown in a try block when there is no catch clause waiting for it? Actually, there's no requirement that you code a catch clause for every possible exception that could be thrown from the corresponding try block. In fact, it's doubtful that you could accomplish such a feat! If a method doesn't provide a catch clause for a particular exception, that method is said to be "ducking" the exception (or "passing the buck"). So what happens to a ducked exception? Before we discuss that, we need to briefly review the concept of the call stack. Most languages have the concept of a method stack or a call stack. Simply put, the call stack is the chain of methods that your program executes to get to the current method. If your program starts in method main() and main() calls method a(), which calls method b(), which in turn calls method c(), the call stack consists of the following:
+
+```java
+c
+b
+a
+main
+```
