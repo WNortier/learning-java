@@ -23,8 +23,6 @@ Here are some of the benefits of Java's exception-handling features:
 
 - It also lets us use the same exception-handling _code to deal with a range of possible exceptions_.
 
-# <a name="4_Common_Exceptions_&_Errors"></a> 4 Common Exceptions & Errors
-
 Java 7 added several new exception-handling capabilities to the language. For our purposes, Oracle split the various exception-handling topics into two main parts:
 
 - #### 1. The OCA exam covers the Java 6 version of exception handling.
@@ -443,7 +441,13 @@ throw new MyException();
 
 ![exam-watch-12](images/exam-watch-12.png)
 
-You need to know how an Error compares with checked and unchecked exceptions. Objects of type Error are not Exception objects, although they do represent exceptional conditions. Both Exception and Error share a common superclass, Throwable; thus, both can be thrown using the throw keyword. When an Error or a subclass of Error (like StackOverflowError) is thrown, it's unchecked. You are not required to catch Error objects or Error subtypes. You can also throw an Error yourself (although, other than AssertionError, you probably won't ever want to), and you can catch one, but again, you probably won't. What, for example, would you actually do if you got an OutOfMemoryError? It's not like you can tell the garbage collector to run; you can bet the JVM fought desperately to save itself (and reclaimed all the memory it could) by the time you got the error. In other words, don't expect the JVM at that point to say, "Run the garbage collector? Oh, thanks so much for telling me. That just never occurred to me. Sure, I'll get right on it." Even better, what would you do if a VirtualMachineError arose? Your program is toast by the time you'd catch the error, so there's really no point in trying to catch one of these babies. Just remember, though, that you can!
+You need to know how an `Error` compares with checked and unchecked exceptions. Objects of type `Error` are not Exception objects, although they do represent exceptional conditions.
+
+> ### Both `Exception` and `Error` share a common superclass, `Throwable`; thus, both can be thrown using the `throw` keyword.
+
+When an `Error` or a subclass of `Error` (like `StackOverflowError`) is thrown, it's unchecked. You are not required to `catch` `Error` objects or `Error` subtypes. You can also throw an `Error` yourself (although, other than `AssertionError`, you probably won't ever want to), and you can catch one, but again, you probably won't.
+
+_What, for example, would you actually do if you got an `OutOfMemoryError`? It's not like you can tell the garbage collector to run; you can bet the JVM fought desperately to save itself (and reclaimed all the memory it could) by the time you got the error. In other words, don't expect the JVM at that point to say, "Run the garbage collector? Oh, thanks so much for telling me. That just never occurred to me. Sure, I'll get right on it." Even better, what would you do if a `VirtualMachineError` arose? Your program is toast by the time you'd catch the error, so there's really no point in trying to catch one of these babies. Just remember, though, that you can!_
 
 The following compiles just fine:
 
@@ -466,4 +470,124 @@ class TestEx {
 }
 ```
 
-If we were throwing a checked exception rather than Error, then the doStuff() method would need to declare the exception. But remember, since Error is not a subtype of Exception, it doesn't need to be declared. You're free to declare it if you like, but the compiler just doesn't care one way or another when or how the Error is thrown or by whom.
+If we were throwing a checked exception rather than `Error`, then the `doStuff()` method would need to declare the exception. But remember, since `Error` is not a subtype of `Exception`, it doesn't need to be declared. You're free to declare it if you like, but the compiler just doesn't care one way or another when or how the `Error` is thrown or by whom.
+
+Because Java has checked exceptions, it's commonly said that Java forces developers to handle exceptions. Yes, Java forces us to write exception handlers for each exception that can occur during normal operation, but it's up to us to make the exception handlers actually do something useful. We know software managers who melt down when they see a programmer write something like this:
+
+```java
+try {
+callBadMethod();
+} catch (Exception ex) { }
+```
+
+Notice anything missing? Don't "eat" the exception by catching it without actually handling it. You won't even be able to tell that the exception occurred because you'll never see the stack trace.
+
+### Rethrowing the Same Exception
+
+Just as you can `throw` a new exception from a `catch` clause, you can also `throw` the same exception you just caught. Here's a `catch` clause that does this:
+
+```java
+catch(IOException e) {
+// Do things, then if you decide you can't handle it...
+throw e;
+}
+```
+
+All other `catch` clauses associated with the same `try` are ignored; if a `finally` block exists, it runs, and the exception is thrown back to the calling method (the next method down the call stack). If you `throw` a checked exception from a catch clause, you must also declare that exception! In other words, you must handle and declare, as opposed to handle or declare. The following example is illegal:
+
+```java
+public void doStuff() {
+    try {
+        // risky IO things
+    } catch(IOException ex) {
+        // can't handle it
+        throw ex; // Can't throw it unless you declare it
+    }
+}
+```
+
+In the preceding code, the `doStuff()` method is clearly able to `throw` a checked exception — in this case an `IOException` — so the compiler says, "Well, that's just peachy that you have a `try`/`catch` in there, but it's not good enough. If you might rethrow the `IOException` you `catch`, then you must declare it (in the method signature)!"
+
+_As nifty as exception handling is, it's still up to the developer to make proper use of it. Exception handling makes organizing code and signaling problems easy, but the exception handlers still have to be written. You'll find that even the most complex situations can be handled, and your code will be reusable, readable, and maintainable._
+
+# <a name="4_Common_Exceptions_&_Errors"></a> 4 Common Exceptions & Errors
+
+### OCA Objectives
+
+**8.5 Recognize common exception classes (such as NullPointerException, ArithmeticException, ArrayIndexOutOfBoundsException, ClassCastException) (sic)**
+
+The intention of this objective is to make sure that you are familiar with some of the most common exceptions and errors you'll encounter as a Java programmer.
+
+This is another one of those objectives that will turn up all through the real exam (does _"An exception is thrown at runtime"_ ring a bell?), so make sure this section gets a lot of your attention.
+
+![exam-watch-12](images/exam-watch-13.png)
+
+### Where Exceptions Come From
+
+It's important that you understand what causes _exceptions_ and _errors_ and where they come from. For the purposes of exam preparation, let's define two broad categories of exceptions and errors:
+
+- 1 JVM exceptions - Those exceptions or errors that are either exclusively or most logically thrown by the JVM
+
+- 2 Programmatic exceptions - Those exceptions that are thrown explicitly by application and/or API programmers
+
+## JVM Thrown Exceptions
+
+Let's start with a very common exception, the `NullPointerException`. As we saw in earlier chapters, this exception occurs when you attempt to access an object using a reference variable with a current value of `null`. There's no way that the compiler can hope to find these problems before runtime.
+
+Take a look at the following:
+
+```java
+class NPE {
+    static String s;
+    public static void main(String [] args) {
+        System.out.println(s.length());
+    }
+}
+```
+
+Surely, the compiler can find the problem with that tiny little program! Nope, you're on your own. The code will compile just fine, and the JVM will throw a `NullPointerException` when it tries to invoke the `length()` method. Earlier in this chapter we discussed the call stack. As you recall, we used the convention that `main()` would be at the bottom of the call stack, and that as `main()` invokes another method, and that method invokes another, and so on, the stack grows upward. Of course, the stack resides in memory, and even if your OS gives you a gigabyte of RAM for your program, it's still a finite amount.
+
+> ### It's possible to grow the stack so large that the OS runs out of space to store the call stack. When this happens, you get (wait for it...) a StackOverflowError.
+
+The most common way for this to occur is to create a recursive method. A recursive method invokes itself in the method body. Although that may sound weird, it's a very common and useful technique for such things as searching and sorting algorithms.
+
+Take a look at this code:
+
+```java
+void go() { // recursion gone bad
+go();
+}
+```
+
+As you can see, if you ever make the mistake of invoking the `go()` method, your program will fall into a black hole — `go()` invoking `go()` invoking `go()`, until, no matter how much memory you have, you'll get a StackOverflowError. Again, only the JVM knows when this moment occurs, and the JVM will be the source of this error.
+
+## Programmatically Thrown Exceptions
+
+Now let's look at programmatically thrown exceptions (Created by an application and/or API developer). For instance, many classes in the Java API have methods that take `String` arguments and convert these Strings into numeric primitives. A good example of these classes is the so-called "wrapper classes" that we will study in Chapter 6.
+
+Even though we haven't talked much about wrapper classes yet, the following example should make sense:
+
+> ### At some point long ago, some programmer wrote the `java.lang.Integer` class and created methods like `parseInt()` and `valueOf()`. That programmer wisely decided that if one of these methods was passed a `String` that could not be converted into a number, the method should throw a `NumberFormatException`.
+
+The partially implemented code might look something like this:
+
+```java
+int parseInt(String s) throws NumberFormatException {
+boolean parseSuccess = false;
+int result = 0;
+// do complicated parsing
+    if (!parseSuccess) // if the parsing failed
+        throw new NumberFormatException();
+return result;
+}
+```
+
+Other examples of programmatic exceptions include an `AssertionError` (okay, it's not an exception, but it IS thrown programmatically) and throwing an `IllegalArgumentException`. In fact, our mythical API developer could have used `IllegalArgumentException` for her `parseInt()` method. But it turns out that `NumberFormatException` extends `IllegalArgumentException` and is a little more precise, so in this case, using `NumberFormatException` supports the notion we discussed earlier:
+
+that when you have an exception hierarchy, you should use the most precise exception that you can. Of course, as we discussed earlier, you can also make up your very own special custom exceptions and throw them whenever you want to. These homemade exceptions also fall into the category of "programmatically thrown exceptions."
+
+### A Summary of the exams Exceptions and Errors
+
+Table 5-2 summarizes the ten exceptions and errors that are most likely a part of the OCA 8 exam.
+
+![exam-watch-12](images/descriptions-&-sources-of-common-exceptions.png)
