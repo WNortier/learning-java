@@ -1,9 +1,5 @@
 - ## [1 Using String & StringBuilder](#1_Using_String_&_StringBuilder)
 - ## [2 Working with Calendar Data](#2_Working_with_Calendar_Data)
-- ## [3 Using Arrays](#3_Using_Arrays)
-- ## [4 Using ArrayLists & Wrappers](#4_Using_ArrayLists_&_Wrappers)
-- ## [5 Advanced Encapsulation](#5_Advanced_Encapsulation)
-- ## [6 Using Simple Lambdas](#6_Using_Simple_Lambdas)
 
 This chapter focuses on the exam objectives related to searching, formatting, and parsing strings; creating and using calendar-related objects; creating and using arrays and `ArrayLists`; and using simple lambda expressions.
 
@@ -473,37 +469,213 @@ Method chaining on `String`:
 
 **9.3 Create and manipulate calendar data using the following classes: `java.time.LocalDateTime`, `java.time.LocalDate`, `java.time.LocalTime`, `java.time.format.DateTimeFormatter`, `java.time.Period`**
 
-Java 8 introduced a large collection (argh) of new packages related to working with calendars, dates, and times. The OCA 8 creators chose to include knowledge of a subset of these packages and classes as an exam objective. If you understand the classes included in the exam objective, you'll have a good introduction to the entire calendar/date/time topic.
+_Java 8 introduced a large collection (argh) of new packages related to working with calendars, dates, and times. The OCA 8 creators chose to include knowledge of a subset of these packages and classes as an exam objective. If you understand the classes included in the exam objective, you'll have a good introduction to the entire calendar/date/time topic._
 
 As we work through this section, we'll use the phrase "calendar object," which we use to refer to objects of one of the several types of calendar-related classes we're covering. So "calendar object" is a made-up umbrella term.
 
 Here's a summary of the five calendar-related classes we'll study, plus an interface that looms large:
 
-■ java.time.LocalDateTime This class is used to create immutable
-objects, each of which represents a specific date and time. Additionally,
-this class provides methods that can manipulate the values of the date/
-time objects created and assign them to new immutable objects.
-LocalDateTime objects contain BOTH information about days, months,
-and years, AND about hours, minutes, seconds, and fractions of seconds.
+### java.time.LocalDateTime
 
-■ java.time.LocalDate This class is used to create immutable objects,
-each of which represents a specific date. Additionally, this class provides
-methods that can manipulate the values of the date objects created and
-assign them to new immutable objects. LocalDate objects are accurate
-only to days. Hours, minutes, and seconds are not part of a LocalDate
-object.
+- This class is used to create immutable objects, each of which represents a specific **date and time**.
+- This class provides methods that can manipulate the values of the **date/time** objects created and assign them to new immutable objects.
+- `LocalDateTime` objects contain BOTH information about days, months, and years, AND about hours, minutes, seconds, and fractions of seconds.
 
-■ java.time.LocalTime This class is used to create immutable objects,
-each of which represents a specific time. Additionally, this class provides
-methods that can manipulate the values of the time objects created and
-assign them to new immutable objects. LocalTime objects refer only to
-hours, minutes, seconds, and fractions of seconds. Days, months, and years
-are not a part of LocalTime objects.
+### java.time.LocalDate
 
-# <a name="3_Using_Arrays"></a> 3 Using Arrays
+- This class is used to create immutable objects, each of which represents a specific **date**.
+- This class provides methods that can manipulate the values of the **date** objects created and assign them to new immutable objects.
+- `LocalDate` objects are accurate only to days. Hours, minutes, and seconds are not part of a `LocalDate` object.
 
-# <a name="4_Using_ArrayLists_&_Wrappers"></a> 4 Using ArrayLists & Wrappers
+### java.time.LocalTime
 
-# <a name="5_Advanced_Encapsulation"></a> 5 Advanced Encapsulation
+- This class is used to create immutable objects, each of which represents a specific **time**.
+- This class provides methods that can manipulate the values of the **time** objects created and assign them to new immutable objects.
+- `LocalTime` objects refer only to hours, minutes, seconds, and fractions of seconds. Days, months, and years are not a part of `LocalTime` objects.
 
-# <a name="6_Using_Simple_Lambdas"></a> 6 Using Simple Lambdas
+### java.time.format.DateTimeFormatter
+
+- DateTimeFormatter objects are also immutable.
+- This class is used by the classes just described to format date/time objects for output and to parse input strings and convert them to date/time objects.
+
+### java.time.Period
+
+- This class is used to create immutable objects that **represent a period of time**, for example, "one year, two months, and three days."
+- This class works in years, months, and days.
+
+  If you want to represent chunks of time in increments finer than a day (e.g., hours and minutes), you can use the `java.time.Duration` class, but `Duration` is not on the exam.
+
+### java.time.temporal.TemporalAmount
+
+This interface is implemented by the Period class. When you use Period objects to manipulate (see the following section), calendar objects, you'll often use methods that take objects that implement `TemporalAmount`.
+
+In general, as you use the Java API more and more, it's a good idea to learn which classes implement which interfaces; this is a key way to learn how the classes in complex packages interact with each other.
+
+## Immutability
+
+There are a couple of recurring themes in the previous definitions.
+
+First, notice that most of the calendar-related objects you'll create are immutable. Just like String objects! So when we say we're going to "manipulate" a calendar object, what we "really" mean is that we'll invoke a method on a calendar object, and we'll return a new calendar object that represents the result of manipulating the value of the original calendar object. But **the original calendar object's value is not, and cannot, be changed**. Just like Strings!
+
+Let's see an example:
+
+```java
+LocalDate date1 = LocalDate.of(2017, 1, 31);
+Period period1 = Period.ofMonths(1);
+System.out.println(date1);
+date1.plus(period1); // new value is lost
+System.out.println(date1);
+LocalDate date2 = date1.plus(period1); // new value is captured
+System.out.println(date2);
+```
+
+which produces:
+
+```java
+2017-01-31
+2017-01-31
+2017-02-28
+```
+
+Notice that invoking the plus method on date1 doesn't change its value, but assigning the result of the plus method to date2 captures a new value. Expect exam questions that test your understanding of the immutability of calendar objects.
+
+## Factory Classses
+
+> ### The next thing to notice in the previous code listing is that we never used the keyword new in the code. We didn't directly invoke a constructor. None of the five classes listed in OCA 8 objective 9.3 have public constructors. Instead, for all these classes, you invoke a **public static** method in the class to create a new object.
+
+As you go further into your studies of OO design, you'll come across the phrases "factory pattern," "factory methods," and "factory classes."
+
+> ### Usually, when a class has no public constructors and provides at least one public static method that can create new instances of the class, that class is called a **factory class**, and any method that is invoked to get a new instance of the class is called a **factory method**.
+
+There are many good reasons to create factory classes, most of which are beyond the scope of this book, but one of them we will discuss now. If we use the `LocalDate` class as an example, we find the following static methods that create and return a new instance:
+
+```java
+from()
+now() // three overloaded methods exist
+of() // two overloaded methods exist
+ofEpochDay()
+ofYearDay()
+parse() // two overloaded methods exist
+```
+
+So we have what, about ten different ways to create a new `LocalDate` object? By using methods with different names (instead of using overloaded constructors), the method names themselves make the code more readable. It's clearer what variation of `LocalDate` we're making. As you use more and more classes from the Java API, you'll discover that the API creators use factory classes a lot.
+
+![exam-watch-5](images/exam-watch-5.png)
+
+## Using and Manipulating Dates and Times
+
+Now that we know how to create new calendar-related objects, let's turn to using and manipulating them. (And you know what we mean when we say "manipulate.")
+
+The following code demonstrates some common uses and powerful features of the new Java 8 calendar-related classes:
+
+```java
+import java.time.*;
+import java.time.format.*;
+import java.time.temporal.ChronoUnit; // not on the exam but VERY useful
+
+public class DrWho {
+  public static void main(String[] args) {
+    DateTimeFormatter f = DateTimeFormatter.ofPattern("MMddyyyy"); // describe a format
+    LocalDate bday = null;
+
+    try {
+      bday = LocalDate.parse(args[0], f); // verify input date; often parse() methods throw exceptions!
+    } catch (java.time.DateTimeException e) {
+      System.out.println("bad dates Indy");
+      System.exit(0);
+    }
+
+    System.out.println("your birthday is: " + bday);
+    System.out.println("a " + bday.getDayOfWeek()); // useful
+
+    Period p1 = Period.between(bday, LocalDate.now()); // very useful!
+    System.out.println("you've lived for: ");
+    System.out.print(p1.getDays() + " days, "); // split up a Period
+    System.out.print(p1.getMonths() + " months, ");
+    System.out.println(p1.getYears() + " years");
+    int yearsOld = p1.getYears();
+
+    if(yearsOld < 0 || yearsOld > 119)
+    System.out.println("Wow, are you a time lord?");
+
+    long tDays = bday.until(LocalDate.now(), // handy method + ChronoUnit.DAYS); // handy enum // = powerful date math
+    System.out.println("you've lived for " + tDays + " days, so far");
+    System.out.println("you'll reach 30,000 days on " + bday.plusDays(30_000)); // date math
+    LocalDate d2000 = LocalDate.of(2_000, 1, 1); // of() is a commonly used 'factory' method
+    Period p2 = Period.between(d2000, LocalDate.now());
+    System.out.println("period since Y2K: " + p2);
+  }
+}
+```
+
+Invoking the program with a relevant birthday:
+
+```java
+java 01201934
+```
+
+produces the output (when run on January 13, 2017):
+
+```java
+your birthday is: 1934-01-20
+a SATURDAY
+you've lived for:
+24 days, 11 months, 82 years
+you've lived for 30309 days, so far
+you'll reach 30000 days on 2016-03-10
+period since Y2K: P17Y12D
+```
+
+There's a lot going on here, so let's do a walk-through.
+
+First, we want users to enter their birthday in the form of `mmddyyyy`. We use a `DateTimeFormatter` object to parse the user's first argument and verify that it's a valid date of the form we're hoping for. Usually in the Java API, `parse()` methods can throw exceptions, so we have to do our parsing in a `try`/`catch` block.
+
+Next, we print out the verified date and show off a bit by printing out what day of the week that date occurred on. This calculation would be quite tricky to do by hand!
+
+Next, we create a `Period` object that represents the amount of time between the user's birthday and today, and we use various `getX()` methods to list the details of the `Period` object.
+
+After making sure we're not dealing with a time lord, we then use the very powerful `until()` method and "day" as the unit of time to determine how many days the user has been alive. We cheated a bit here and used the `ChronoUnit` enum from the `java.time.temporal package`. (Even though ChronoUnit isn't on the exam, we think if you do a lot of calendar calculations, you'll end up using this enum a lot.)
+
+Next, we add 30,000 days to the user's birthday so we can calculate on which date our user will have lived for 30,000 days. It's a short jump to seeing how these sorts of calendar calculations will be very powerful for scheduling applications, project management applications, travel planning, and so on.
+
+Finally, we use a common factory method, `of()`, to create another date object (representing today's date), and we use that in conjunction with the very powerful `between()` method to see how long it's been since January 1, 2000, Y2K.
+
+## Formatting Dates and Times
+
+Now let's turn to formatting dates and times using the `DateTimeFormatter` class, so your calendar objects will look all shiny when you want to include them in your program's output. For the exam, you should know the following two-step process for creating Strings that represent well-formatted calendar objects:
+
+- 1. Use formatters and patterns from the HUGE lists provided in the `DateTimeFormatter` class to create a `DataTimeFormatter` object.
+
+- 2. In the LocalDate, LocalDateTime, and LocalTime classes, use the format() method with the `DateTimeFormatter` object as the argument to create a well-formed String—or use the `DateTimeFormatter.format()` method with a calendar argument to create a well-formed String.
+
+Let's look at a few examples:
+
+```java
+import java.time.*;
+import java.time.format.*;
+public class NiceDates {
+  public static void main(String[] args) {
+    DateTimeFormatter f1 = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+    DateTimeFormatter f2 = DateTimeFormatter.ofPattern("E MMM dd, yyyy G");
+    DateTimeFormatter tf1 = DateTimeFormatter.ofPattern("k:m:s A a");
+
+    LocalDate d = LocalDate.now();
+
+    String s = d.format(f1); // thus proving that the format() method makes String objects
+    System.out.println(s);
+    System.out.println(d.format(f2));
+    LocalTime t = LocalTime.now();
+    System.out.println(t.format(tf1));
+  }
+}
+```
+
+which, when we ran this code, produced the following (your output will vary):
+
+```java
+Jan 14, 2017
+Sat Jan 14, 2017 AD
+14:17:9 51429958 PM
+```
+
+Some of the pattern codes we used are self-evident (e.g. MMM dd yyyy), and some are fairly arbitrary like "E" for day of week or "k" for military hours. All of the codes can be found in the `DateTimeFormatter` API. That's enough about calendars; on to arrays!
